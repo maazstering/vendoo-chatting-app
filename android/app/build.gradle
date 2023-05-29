@@ -30,7 +30,7 @@ apply plugin: 'com.android.application'
 android {
     namespace "com.example.vendoo"
     compileSdkVersion flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
+    ndkVersion 19  
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
