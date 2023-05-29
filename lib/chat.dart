@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vendoo/message.dart';
 import 'package:vendoo/newroom.dart';
@@ -5,6 +6,7 @@ import 'package:vendoo/newroom.dart';
 class ChatRoomJoiningPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
       appBar: AppBar(
         title: Text('Chat Rooms'),
