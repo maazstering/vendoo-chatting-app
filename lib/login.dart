@@ -5,9 +5,16 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login Page'),
-      ),
+      appBar: AppBar(title: Text('Login Page'), actions: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset(
+            'assets/ventooV.png', // Assuming the logo file is in the assets folder
+            width: 30,
+            height: 30,
+          ),
+        ),
+      ]),
       body: Padding(
         padding: EdgeInsets.all(20.0),
         child: SingleChildScrollView(
