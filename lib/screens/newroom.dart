@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vendoo/chat.dart';
+import 'package:vendoo/screens/chat.dart';
 
 class ChatRoomCreationPage extends StatefulWidget {
   @override

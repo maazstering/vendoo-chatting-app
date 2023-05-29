@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vendoo/message.dart';
-import 'package:vendoo/newroom.dart';
+import 'package:vendoo/screens/message.dart';
+import 'package:vendoo/screens/newroom.dart';
 
 class ChatRoomJoiningPage extends StatelessWidget {
   @override
