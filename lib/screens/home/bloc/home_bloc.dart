@@ -17,18 +17,5 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         (event, emit) => emit(HomeChatPageNavigateActionState()));
 
 
-    // Stream<HomeState> mapEventToState(HomeEvent event) async* {
-    // if (event is HomepageLoginButtonNavigateEvent) {
-    //   yield HomeLoginPageNavigateActionState();
-
-    // }
-    // if (event is HomepageSignUpButtonNavigateEvent) {
-    //   yield HomeSignPageUpNavigateActionState();
-
-    // }
-    // if (event is HomepageChatButtonNavigateEvent) {
-    //   yield HomeChatPageNavigateActionState();
-
-    // }
   }
 }
