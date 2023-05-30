@@ -8,9 +8,10 @@ if (localPropertiesFile.exists()) {
 
 def flutterRoot = localProperties.getProperty('flutter.sdk')
 if (flutterRoot == null) {
-    throw new FileNotFoundException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+    throw GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
-//yahan GradleException likha tha
+//FileNotFoundException
+//yahan GradleExceflutter pub add firebase_authption likha tha
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
     flutterVersionCode = '1'
@@ -25,7 +26,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.android.application'
 
 android {
     namespace "com.example.vendoo"

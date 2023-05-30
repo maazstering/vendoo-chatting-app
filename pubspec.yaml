@@ -33,7 +33,7 @@ dependencies:
   provider: 
   flutter_bloc: 
   cloud_firestore:
-  firebase_auth: 
+  firebase_auth: ^4.6.1 
   image_picker: 
   flutter_local_notifications: 
   fluttertoast: 
