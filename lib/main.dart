@@ -1,13 +1,12 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:vendoo/screens/signup.dart';
-import 'package:vendoo/screens/chat.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:vendoo/signup.dart';
+import 'package:vendoo/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'screens/login.dart';
+import 'login.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+void main() {
   runApp(MyApp());
 }
 
@@ -61,10 +60,7 @@ class HomePage extends StatelessWidget {
                   width: 200,
                   height: 200,
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                SizedBox(height: 10),
+                SizedBox(height: 20),
                 SizedBox(
                   width: 200,
                   height: 50,
@@ -94,10 +90,7 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                SizedBox(height: 10),
+                SizedBox(height: 20),
                 SizedBox(
                   width: 200,
                   height: 50,
@@ -127,9 +120,7 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
+                SizedBox(height: 20),
                 SizedBox(
                   width: 200,
                   height: 50,
@@ -152,17 +143,12 @@ class HomePage extends StatelessWidget {
                       foregroundColor:
                           MaterialStateProperty.all<Color>(Colors.white),
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        EdgeInsets.zero,
-                      ),
-                      overlayColor: MaterialStateProperty.all<Color>(
-                        Colors.transparent,
-                      ),
-                      shadowColor: MaterialStateProperty.all<Color>(
-                        Colors.transparent,
-                      ),
-                      minimumSize: MaterialStateProperty.all<Size>(
-                        Size(0, 0),
-                      ),
+                          EdgeInsets.zero),
+                      overlayColor:
+                          MaterialStateProperty.all<Color>(Colors.transparent),
+                      shadowColor:
+                          MaterialStateProperty.all<Color>(Colors.transparent),
+                      minimumSize: MaterialStateProperty.all<Size>(Size(0, 0)),
                       elevation: MaterialStateProperty.all<double>(0),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       textStyle: MaterialStateProperty.all<TextStyle>(
