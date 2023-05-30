@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:vendoo/screens/message.dart';
-import 'package:vendoo/screens/newroom.dart';
+import 'package:vendoo/screens/messaging/ui/message.dart';
+import 'package:vendoo/screens/newroom/ui/newroom.dart';
 
 class ChatRoomJoiningPage extends StatelessWidget {
   @override
