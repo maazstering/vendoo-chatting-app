@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class MessagingScreen extends StatefulWidget {
   final String chatRoomName;
 
-  MessagingScreen({required this.chatRoomName});
+  const MessagingScreen({super.key, required this.chatRoomName});
 
   @override
   _MessagingScreenState createState() => _MessagingScreenState();
@@ -12,7 +12,7 @@ class MessagingScreen extends StatefulWidget {
 class _MessagingScreenState extends State<MessagingScreen> {
   List<String> messages = [];
 
-  TextEditingController _messageController = TextEditingController();
+  final TextEditingController _messageController = TextEditingController();
 
   void _sendMessage() {
     String message = _messageController.text;
@@ -34,7 +34,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
         children: [
           Expanded(
             child: ListView.builder(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               itemCount: messages.length,
               reverse: true,
               itemBuilder: (BuildContext context, int index) {
@@ -51,13 +51,13 @@ class _MessagingScreenState extends State<MessagingScreen> {
                 Expanded(
                   child: TextField(
                     controller: _messageController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Type a message...',
                     ),
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.send),
+                  icon: const Icon(Icons.send),
                   onPressed: () {
                     _sendMessage();
                   },

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../login/ui/login.dart';
 
 class SignupPage extends StatefulWidget {
+  const SignupPage({super.key});
+
   @override
   _SignupPageState createState() => _SignupPageState();
 }
@@ -28,7 +30,7 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Sign Up Page'), actions: [
+      appBar: AppBar(title: const Text('Sign Up Page'), actions: [
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Image.asset(
@@ -39,7 +41,7 @@ class _SignupPageState extends State<SignupPage> {
         ),
       ]),
       body: Padding(
-        padding: EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -50,21 +52,21 @@ class _SignupPageState extends State<SignupPage> {
                 width: 150,
                 height: 150,
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Email',
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: passwordController,
                 obscureText: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Password',
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: confirmPasswordController,
                 obscureText: true,
@@ -76,22 +78,22 @@ class _SignupPageState extends State<SignupPage> {
                   checkPasswordsMatch();
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   // Perform sign-up action
                 },
-                child: Text('Sign Up'),
+                child: const Text('Sign Up'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
                   );
                 },
-                child: Text(
+                child: const Text(
                   "Already have an account? Login",
                   style: TextStyle(
                     fontSize: 16,

@@ -1,17 +1,19 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'screens/signup/ui/signup.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
+// import 'screens/signup/ui/signup.dart';
 import 'screens/home/ui/homepage.dart';
-import 'screens/chat/ui/chat.dart';
+//import 'screens/chat/ui/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'screens/login/ui/login.dart';
-import 'package:firebase_core/firebase_core.dart';
+// import 'screens/login/ui/login.dart';
+// import 'package:firebase_core/firebase_core.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(

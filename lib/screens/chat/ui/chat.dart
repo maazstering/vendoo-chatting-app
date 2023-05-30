@@ -1,14 +1,15 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vendoo/screens/messaging/ui/message.dart';
 import 'package:vendoo/screens/newroom/ui/newroom.dart';
 
 class ChatRoomJoiningPage extends StatelessWidget {
+  const ChatRoomJoiningPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chat Rooms'),
+        title: const Text('Chat Rooms'),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -26,26 +27,26 @@ class ChatRoomJoiningPage extends StatelessWidget {
             child: ListView(
               children: [
                 ListTile(
-                  title: Text('Chat Room 1'),
-                  subtitle: Text('Lorem ipsum dolor sit amet.'),
+                  title: const Text('Chat Room 1'),
+                  subtitle: const Text('Lorem ipsum dolor sit amet.'),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => MessagingScreen(
+                          builder: (context) => const MessagingScreen(
                                 chatRoomName: "Chat Room 1",
                               )),
                     );
                   },
                 ),
                 ListTile(
-                  title: Text('Chat Room 2'),
-                  subtitle: Text('Consectetur adipiscing elit.'),
+                  title: const Text('Chat Room 2'),
+                  subtitle: const Text('Consectetur adipiscing elit.'),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => MessagingScreen(
+                          builder: (context) => const MessagingScreen(
                                 chatRoomName: "Chat Room 2",
                               )),
                     );
@@ -61,10 +62,10 @@ class ChatRoomJoiningPage extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ChatRoomCreationPage()),
+            MaterialPageRoute(builder: (context) => const ChatRoomCreationPage()),
           );
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:vendoo/screens/chat/ui/chat.dart';
 
 class ChatRoomCreationPage extends StatefulWidget {
+  const ChatRoomCreationPage({super.key});
+
   @override
   _ChatRoomCreationPageState createState() => _ChatRoomCreationPageState();
 }
@@ -18,7 +20,7 @@ class _ChatRoomCreationPageState extends State<ChatRoomCreationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Chat Room'),
+        title: const Text('Create Chat Room'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -33,16 +35,16 @@ class _ChatRoomCreationPageState extends State<ChatRoomCreationPage> {
                 child: Container(
                   width: 100,
                   height: 100,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.grey,
                   ),
-                  child: Icon(Icons.upload_file, size: 50, color: Colors.white),
+                  child: const Icon(Icons.upload_file, size: 50, color: Colors.white),
                 ),
               ),
             ),
-            SizedBox(height: 16.0),
-            Text('Set the name of the chat room:'),
+            const SizedBox(height: 16.0),
+            const Text('Set the name of the chat room:'),
             TextField(
               onChanged: (value) {
                 setState(() {
@@ -50,8 +52,8 @@ class _ChatRoomCreationPageState extends State<ChatRoomCreationPage> {
                 });
               },
             ),
-            SizedBox(height: 16.0),
-            Text('Set the description of the chat room:'),
+            const SizedBox(height: 16.0),
+            const Text('Set the description of the chat room:'),
             TextField(
               onChanged: (value) {
                 setState(() {
@@ -59,7 +61,7 @@ class _ChatRoomCreationPageState extends State<ChatRoomCreationPage> {
                 });
               },
             ),
-            SizedBox(height: 32.0),
+            const SizedBox(height: 32.0),
             Center(
               child: SizedBox(
                 width: 200,
@@ -71,24 +73,22 @@ class _ChatRoomCreationPageState extends State<ChatRoomCreationPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ChatRoomJoiningPage(),
+                        builder: (context) => const ChatRoomJoiningPage(),
                       ),
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
+                    foregroundColor: Colors.white, backgroundColor: Colors.transparent, shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(28.0),
                     ),
-                    primary: Colors.transparent,
-                    onPrimary: Colors.white,
                     padding: EdgeInsets.zero,
                     elevation: 0,
-                    minimumSize: Size(0, 0),
+                    minimumSize: const Size(0, 0),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                   child: Ink(
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
+                      gradient: const LinearGradient(
                         colors: [
                           Color(0xFF53EAEB),
                           Color(0xFF016BB4),
@@ -104,7 +104,7 @@ class _ChatRoomCreationPageState extends State<ChatRoomCreationPage> {
                     ),
                     child: Container(
                       alignment: Alignment.center,
-                      child: Text(
+                      child: const Text(
                         'Chat',
                         style: TextStyle(fontSize: 17),
                       ),
