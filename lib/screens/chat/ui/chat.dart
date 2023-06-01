@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:vendoo/api/apis.dart';
 import 'package:vendoo/screens/messaging/ui/message.dart';
 import 'package:vendoo/screens/newroom/ui/newroom.dart';
 import 'package:vendoo/screens/account/ui/account.dart';
+import '../../../widgets/chat_user_card.dart';
 
 class ChatRoomJoiningPage extends StatelessWidget {
   const ChatRoomJoiningPage({super.key});
@@ -21,8 +24,8 @@ class ChatRoomJoiningPage extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => AccountPage()),
               );
             },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
+            child: const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Icon(Icons.account_circle),
             ),
           ),
@@ -31,42 +34,27 @@ class ChatRoomJoiningPage extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: StreamBuilder<Object>(
-              stream: APIs.firestore.collection('messages').snapshots(), // TODO: WORK TO BE DONE HERE
-              builder: (context, snapshot) {
-                return ListView(
-                  children: [
-                    ListTile(
-                      title: const Text('Chat Room 1'),
-                      subtitle: const Text('Lorem ipsum dolor sit amet.'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const MessagingScreen(
-                                    chatRoomName: "Chat Room 1",
-                                  )),
-                        );
-                      },
-                    ),
-                    ListTile(
-                      title: const Text('Chat Room 2'),
-                      subtitle: const Text('Consectetur adipiscing elit.'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const MessagingScreen(
-                                    chatRoomName: "Chat Room 2",
-                                  )),
-                        );
-                      },
-                    ),
-                    // Add more chat rooms here
-                  ],
-                );
-              }
-            ),
+            child: StreamBuilder(
+                stream: APIs.firestore
+                    .collection('Users')
+                    .snapshots(), // TODO: WORK TO BE DONE HERE
+                builder: (context, snapshot) {
+                  final list = [];
+                  if (snapshot.hasData){
+                    final data = snapshot.data?.docs;
+                    for (var i in data!){
+                      print(jsonEncode(i.data()));
+                      list.add(i.data()['name']);
+                    }
+                  }
+                  return ListView.builder(
+                    itemCount: list.length,
+                    physics: const BouncingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                    //return const chatUserCard();
+                    return Text('Name: ${list[index]} ');
+                  });
+                }),
           ),
         ],
       ),
