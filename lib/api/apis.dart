@@ -11,6 +11,9 @@ class APIs {
   //get instance of the current user
   static User get user => auth.currentUser!;
 
+  //creating a user instance for myself
+  static late ChatUser me;
+
 // checking to see if a user already exists
   static Future<bool> userExists() async {
     if (user != null) {
@@ -20,6 +23,17 @@ class APIs {
     }
     return false;
   }
+
+  static Future<void> getSelfInfo() async {
+          await firestore.collection('Users').doc(user.uid).get().then((user) async {
+            if (user.exists){
+              me = ChatUser.fromJson(user.data()!);
+            }else{
+              await createUser().then((value) => getSelfInfo());
+            }
+          });
+    }
+
 
   //creating a new user
   static Future<void> createUser() async {
@@ -41,5 +55,10 @@ class APIs {
         .collection('Users')
         .doc(user.uid)
         .set(chatUser.toJson());
+  }
+
+  // for getting all users from firestore database
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers(){
+    return firestore.collection('Users').where('id', isNotEqualTo: user.uid).snapshots();
   }
 }

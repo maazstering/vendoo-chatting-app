@@ -10,8 +10,19 @@ import 'package:vendoo/screens/account/ui/account.dart';
 import '../../../widgets/chat_user_card.dart';
 import '../../../models/chat_user.dart';
 
-class ChatRoomJoiningPage extends StatelessWidget {
+class ChatRoomJoiningPage extends StatefulWidget {
   ChatRoomJoiningPage({super.key});
+
+  @override
+  State<ChatRoomJoiningPage> createState() => _ChatRoomJoiningPageState();
+}
+
+class _ChatRoomJoiningPageState extends State<ChatRoomJoiningPage> {
+  @override
+  initState() {
+    super.initState();
+    APIs.getSelfInfo();
+  }
   List<ChatUser> list = [];
 
   @override
@@ -39,7 +50,7 @@ class ChatRoomJoiningPage extends StatelessWidget {
         children: [
           Expanded(
             child: StreamBuilder(
-                stream: APIs.firestore.collection('Users').snapshots(),
+                stream: APIs.getAllUsers(),
                 builder: (context, snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
