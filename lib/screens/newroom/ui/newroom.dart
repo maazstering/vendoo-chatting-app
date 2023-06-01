@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:vendoo/screens/chat/ui/chat.dart';
+import '../../../widgets/chatbutton.dart';
 
 class ChatRoomCreationPage extends StatefulWidget {
-  const ChatRoomCreationPage({super.key});
+  const ChatRoomCreationPage({Key? key}) : super(key: key);
 
   @override
   _ChatRoomCreationPageState createState() => _ChatRoomCreationPageState();
@@ -39,7 +40,8 @@ class _ChatRoomCreationPageState extends State<ChatRoomCreationPage> {
                     shape: BoxShape.circle,
                     color: Colors.grey,
                   ),
-                  child: const Icon(Icons.upload_file, size: 50, color: Colors.white),
+                  child: const Icon(Icons.upload_file,
+                      size: 50, color: Colors.white),
                 ),
               ),
             ),
@@ -62,55 +64,18 @@ class _ChatRoomCreationPageState extends State<ChatRoomCreationPage> {
               },
             ),
             const SizedBox(height: 32.0),
-            Center(
-              child: SizedBox(
-                width: 200,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Handle create room button click
-                    // You can access the chatRoomName and chatRoomDescription variables here
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChatRoomJoiningPage(),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white, backgroundColor: Colors.transparent, shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(28.0),
+            SizedBox(
+              height: 50,
+              width: 200,
+              child: ChatButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatRoomJoiningPage(),
                     ),
-                    padding: EdgeInsets.zero,
-                    elevation: 0,
-                    minimumSize: const Size(0, 0),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  child: Ink(
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xFF53EAEB),
-                          Color(0xFF016BB4),
-                          Color(0xFF2D3A93),
-                          Color(0xFF8139B8),
-                          Color(0xFF783BB3),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        stops: [0.0712, 0.285, 0.4562, 0.7251, 0.9251],
-                      ),
-                      borderRadius: BorderRadius.circular(28.0),
-                    ),
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: const Text(
-                        'Chat',
-                        style: TextStyle(fontSize: 17),
-                      ),
-                    ),
-                  ),
-                ),
+                  );
+                },
               ),
             ),
           ],

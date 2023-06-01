@@ -68,6 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Text('Something went wrong!'),
                     );
                   } else if (snapshot.hasData) {
+                    //takes you to the chat room if you are logged in
                     return ChatRoomJoiningPage();
                   } else {
                     return Scaffold(
