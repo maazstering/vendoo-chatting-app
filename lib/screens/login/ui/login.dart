@@ -26,9 +26,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> login() async {
-    // showDialog(
-    //     context: context,
-    //     builder: (context) => const Center(child: CircularProgressIndicator()));
     try {
       await APIs.auth.signInWithEmailAndPassword(
           email: emailController.text.trim(),
@@ -115,7 +112,8 @@ class _LoginPageState extends State<LoginPage> {
                               const SizedBox(height: 30),
                               ElevatedButton(
                                 onPressed: () {
-                                  login(); //login the user
+                                  loginBloc.add(LoginPageSubmitButtonPressedEvent());
+
                                 },
                                 child: const Text('Submit'),
                               ),
