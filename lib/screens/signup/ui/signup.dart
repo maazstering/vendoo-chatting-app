@@ -25,6 +25,7 @@ class _SignupPageState extends State<SignupPage> {
 
   Future<void> signUp() async {
     if (passwordsMatch) {
+      await APIs.createUser().then((value) async{
       try {
         await APIs.auth.createUserWithEmailAndPassword(
             email: emailController.text.trim(),
@@ -33,6 +34,12 @@ class _SignupPageState extends State<SignupPage> {
         print(e);
       }
     }
+      );
+    }
+  }
+
+  Future<void> createUser() async{
+
   }
 
   @override
@@ -127,3 +134,19 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 }
+
+// Future<void> signUp() async {
+
+//     if (passwordsMatch) {
+//       await APIs.createUser().then((value) async{
+//       try {
+//         await APIs.auth.createUserWithEmailAndPassword(
+//             email: emailController.text.trim(),
+//             password: passwordController.text.trim());
+//       } on FirebaseAuthException catch (e) {
+//         print(e);
+//       }
+//       }
+//       );
+//     }
+//   }

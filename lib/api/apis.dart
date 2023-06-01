@@ -9,8 +9,7 @@ class APIs {
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   //get instance of the current user
-  static get user => auth.currentUser!;
-
+  static User get user => auth.currentUser!;
 
 // checking to see if a user already exists
   static Future<bool> userExists() async {
@@ -25,11 +24,11 @@ class APIs {
   //creating a new user
   static Future<void> createUser() async {
     final time = DateTime.now().microsecondsSinceEpoch.toString();
-
+    print("user object created");
     final chatUser = ChatUser(
         id: user.uid,
         name: user.displayName.toString(),
-        email: user.email,
+        email: user.email.toString(),
         about: "Hey I am using vendoo",
         image: user.photoURL.toString(),
         createdAt: time,
@@ -37,7 +36,10 @@ class APIs {
         lastActive: time,
         pushToken: '');
 
-        //adding the user to the firestore collection
-        return await firestore.collection('Users').doc(user.uid).set(chatUser.toJson());
+    //adding the user to the firestore collection
+    return await firestore
+        .collection('Users')
+        .doc(user.uid)
+        .set(chatUser.toJson());
   }
 }
