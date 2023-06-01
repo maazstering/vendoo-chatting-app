@@ -1,14 +1,18 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vendoo/api/apis.dart';
-import 'package:vendoo/screens/messaging/ui/message.dart';
+import 'package:vendoo/models/chat_user.dart';
+//import 'package:vendoo/screens/messaging/ui/message.dart';
 import 'package:vendoo/screens/newroom/ui/newroom.dart';
 import 'package:vendoo/screens/account/ui/account.dart';
 import '../../../widgets/chat_user_card.dart';
+import '../../../models/chat_user.dart';
 
 class ChatRoomJoiningPage extends StatelessWidget {
-  const ChatRoomJoiningPage({super.key});
+  ChatRoomJoiningPage({super.key});
+  List<ChatUser> list = [];
 
   @override
   Widget build(BuildContext context) {
@@ -35,25 +39,32 @@ class ChatRoomJoiningPage extends StatelessWidget {
         children: [
           Expanded(
             child: StreamBuilder(
-                stream: APIs.firestore
-                    .collection('Users')
-                    .snapshots(), // TODO: WORK TO BE DONE HERE
+                stream: APIs.firestore.collection('Users').snapshots(),
                 builder: (context, snapshot) {
-                  final list = [];
-                  if (snapshot.hasData){
-                    final data = snapshot.data?.docs;
-                    for (var i in data!){
-                      print(jsonEncode(i.data()));
-                      list.add(i.data()['name']);
-                    }
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                    case ConnectionState.none:
+                      return const Center(child: CircularProgressIndicator());
+                    case ConnectionState.active:
+                    case ConnectionState.done:
+                      final data = snapshot.data?.docs;
+                      list = data
+                              ?.map((e) => ChatUser.fromJson(e.data()))
+                              .toList() ??
+                          [];
+                      if (list.isNotEmpty) {
+                        return ListView.builder(
+                            itemCount: list.length,
+                            physics: const BouncingScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return chatUserCard(user: list[index]);
+                            });
+                      } else {
+                        return const Center(
+                            child: Text('No connections found!',
+                                style: TextStyle(fontSize: 20)));
+                      }
                   }
-                  return ListView.builder(
-                    itemCount: list.length,
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                    //return const chatUserCard();
-                    return Text('Name: ${list[index]} ');
-                  });
                 }),
           ),
         ],

@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Text('Something went wrong!'),
                     );
                   } else if (snapshot.hasData) {
-                    return const ChatRoomJoiningPage();
+                    return ChatRoomJoiningPage();
                   } else {
                     return Scaffold(
                       appBar: AppBar(

@@ -73,7 +73,7 @@ class _ChatRoomCreationPageState extends State<ChatRoomCreationPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ChatRoomJoiningPage(),
+                        builder: (context) => ChatRoomJoiningPage(),
                       ),
                     );
                   },
