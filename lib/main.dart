@@ -38,7 +38,9 @@ class MyApp extends StatelessWidget {
               primarySwatch: Colors.purple,
               brightness: Brightness.dark,
             ),
-            home: HomePage(),
+            home: HomePage(
+                key:
+                    ValueKey('myHomePage')), // to take you to the main homepage
             debugShowCheckedModeBanner: false,
           );
         },
