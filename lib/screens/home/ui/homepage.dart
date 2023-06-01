@@ -5,7 +5,6 @@ import 'package:vendoo/screens/login/ui/login.dart';
 import 'package:vendoo/screens/signup/ui/signup.dart';
 import '../../../main.dart';
 import 'package:provider/provider.dart';
-import '../../../api/apis.dart';
 import '../bloc/home_bloc.dart';
 
 class HomePage extends StatelessWidget {

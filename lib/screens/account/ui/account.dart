@@ -51,7 +51,7 @@ class AccountPage extends StatelessWidget {
             onTap: () {
               signOut();
               Navigator.push(context,
-                MaterialPageRoute(builder: (context) =>  HomePage()));
+                MaterialPageRoute(builder: (context) =>  HomePage(key: const ValueKey('myHomePage'))));
             },
           ),
         ],
