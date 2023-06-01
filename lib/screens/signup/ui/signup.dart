@@ -26,12 +26,11 @@ class _SignupPageState extends State<SignupPage> {
 
   Future<void> signUp() async {
     if (passwordsMatch) {
-      try{
+      try {
         await auth.createUserWithEmailAndPassword(
-          email: emailController.text.trim(),
-          password: passwordController.text.trim());
-      }
-      on FirebaseAuthException catch (e){
+            email: emailController.text.trim(),
+            password: passwordController.text.trim());
+      } on FirebaseAuthException catch (e) {
         print(e);
       }
     }
@@ -48,17 +47,18 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text('Sign Up Page'), actions: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Image.asset(
-            'assets/images/ventooV.png', // Assuming the logo file is in the assets folder
-            width: 30,
-            height: 30,
-          ),
-        ),
-      ]),
+          automaticallyImplyLeading: false,
+          title: const Text('Sign Up'),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset(
+                'assets/images/ventooV.png', // Assuming the logo file is in the assets folder
+                width: 30,
+                height: 30,
+              ),
+            ),
+          ]),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(

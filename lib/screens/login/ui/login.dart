@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
           password: passwordController.text.trim());
     } on FirebaseAuthException catch (e) {
       print(e);
-    } 
+    }
   }
 
   @override
@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                     return Scaffold(
                       appBar: AppBar(
                         automaticallyImplyLeading: false,
-                        title: const Text('Login Page'),
+                        title: const Text('Login'),
                         actions: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),

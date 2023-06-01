@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vendoo/screens/messaging/ui/message.dart';
 import 'package:vendoo/screens/newroom/ui/newroom.dart';
+import 'package:vendoo/screens/account/ui/account.dart';
 
 class ChatRoomJoiningPage extends StatelessWidget {
   const ChatRoomJoiningPage({super.key});
@@ -9,15 +10,19 @@ class ChatRoomJoiningPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         title: const Text('Chat Rooms'),
         actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset(
-              'assets/images/ventooV.png', // Assuming the logo file is in the assets folder
-              width: 30,
-              height: 30,
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AccountPage()),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.account_circle),
             ),
           ),
         ],
@@ -63,7 +68,8 @@ class ChatRoomJoiningPage extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const ChatRoomCreationPage()),
+            MaterialPageRoute(
+                builder: (context) => const ChatRoomCreationPage()),
           );
         },
         child: const Icon(Icons.add),
