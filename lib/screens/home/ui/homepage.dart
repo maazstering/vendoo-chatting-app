@@ -5,7 +5,7 @@ import 'package:vendoo/screens/login/ui/login.dart';
 import 'package:vendoo/screens/signup/ui/signup.dart';
 import '../../../main.dart';
 import 'package:provider/provider.dart';
-
+import '../../../api/apis.dart';
 import '../bloc/home_bloc.dart';
 
 class HomePage extends StatelessWidget {
@@ -38,6 +38,27 @@ class HomePage extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               automaticallyImplyLeading: false,
+              actions: [
+                Positioned(
+                  // top: 30,
+                  // right: 10,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: IconButton(
+                      onPressed: () {
+                        Provider.of<ThemeProvider>(context, listen: false)
+                            .toggleTheme();
+                      },
+                      icon: Icon(
+                        Provider.of<ThemeProvider>(context).isDarkMode
+                            ? Icons.nightlight_round
+                            : Icons.wb_sunny_rounded,
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             body: Stack(
               children: [
@@ -175,22 +196,7 @@ class HomePage extends StatelessWidget {
                     ],
                   ),
                 ),
-                Positioned(
-                  top: 30,
-                  right: 10,
-                  child: IconButton(
-                    onPressed: () {
-                      Provider.of<ThemeProvider>(context, listen: false)
-                          .toggleTheme();
-                    },
-                    icon: Icon(
-                      Provider.of<ThemeProvider>(context).isDarkMode
-                          ? Icons.nightlight_round
-                          : Icons.wb_sunny_rounded,
-                      size: 30,
-                    ),
-                  ),
-                ),
+                
               ],
             ),
           );

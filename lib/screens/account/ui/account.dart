@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:vendoo/screens/home/ui/homepage.dart';
 
 class AccountPage extends StatelessWidget {
+  final FirebaseAuth auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,17 +24,17 @@ class AccountPage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          CircleAvatar(
+          const CircleAvatar(
             radius: 80,
             backgroundImage: AssetImage('assets/images/profile_picture.jpg'),
             child: Icon(Icons.account_circle, size: 150),
           ),
-          SizedBox(height: 16.0),
-          ListTile(
+          const SizedBox(height: 16.0),
+          const ListTile(
             leading: Icon(Icons.person),
             title: Text('John Doe'),
           ),
-          ListTile(
+          const ListTile(
             leading: Icon(Icons.email),
             title: Text('johndoe@example.com'),
           ),
@@ -46,11 +49,21 @@ class AccountPage extends StatelessWidget {
             leading: Icon(Icons.logout),
             title: Text('Sign Out'),
             onTap: () {
-              // Handle sign out action
+              signOut();
+              Navigator.push(context,
+                MaterialPageRoute(builder: (context) =>  HomePage()));
             },
           ),
         ],
       ),
     );
+  }
+}
+
+void signOut() async {
+  try {
+    await FirebaseAuth.instance.signOut();
+  } catch (e) {
+    print('Error signing out: $e');
   }
 }

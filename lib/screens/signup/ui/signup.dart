@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+//import 'package:firebase_core/firebase_core.dart';
+import '../../../api/apis.dart';
 import 'package:flutter/material.dart';
 import '../../login/ui/login.dart';
 
@@ -11,7 +12,8 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  FirebaseAuth auth = FirebaseAuth.instance;
+  //APIs get api => APIs();
+  //FirebaseAuth auth = FirebaseAuth.instance;
   bool passwordsMatch = true;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -27,7 +29,7 @@ class _SignupPageState extends State<SignupPage> {
   Future<void> signUp() async {
     if (passwordsMatch) {
       try {
-        await auth.createUserWithEmailAndPassword(
+        await APIs.auth.createUserWithEmailAndPassword(
             email: emailController.text.trim(),
             password: passwordController.text.trim());
       } on FirebaseAuthException catch (e) {

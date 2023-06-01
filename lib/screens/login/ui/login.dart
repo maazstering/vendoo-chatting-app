@@ -4,6 +4,7 @@ import 'package:vendoo/screens/chat/ui/chat.dart';
 import 'package:vendoo/screens/login/bloc/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../signup/ui/signup.dart';
+import '../../../api/apis.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -13,8 +14,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  //bool isLoading = false;
-  FirebaseAuth auth = FirebaseAuth.instance;
+  //FirebaseAuth auth = FirebaseAuth.instance;
   final LoginBloc loginBloc = LoginBloc();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
     //     context: context,
     //     builder: (context) => const Center(child: CircularProgressIndicator()));
     try {
-      await auth.signInWithEmailAndPassword(
+      await APIs.auth.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
     } on FirebaseAuthException catch (e) {
@@ -58,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
         builder: (context, state) {
           return Scaffold(
             body: StreamBuilder<User?>(
-                stream: auth.authStateChanges(),
+                stream: APIs.auth.authStateChanges(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
