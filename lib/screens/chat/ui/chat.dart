@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vendoo/api/apis.dart';
 import 'package:vendoo/screens/messaging/ui/message.dart';
 import 'package:vendoo/screens/newroom/ui/newroom.dart';
 import 'package:vendoo/screens/account/ui/account.dart';
@@ -30,36 +31,41 @@ class ChatRoomJoiningPage extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: ListView(
-              children: [
-                ListTile(
-                  title: const Text('Chat Room 1'),
-                  subtitle: const Text('Lorem ipsum dolor sit amet.'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MessagingScreen(
-                                chatRoomName: "Chat Room 1",
-                              )),
-                    );
-                  },
-                ),
-                ListTile(
-                  title: const Text('Chat Room 2'),
-                  subtitle: const Text('Consectetur adipiscing elit.'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MessagingScreen(
-                                chatRoomName: "Chat Room 2",
-                              )),
-                    );
-                  },
-                ),
-                // Add more chat rooms here
-              ],
+            child: StreamBuilder<Object>(
+              stream: APIs.firestore.collection('messages').snapshots(), // TODO: WORK TO BE DONE HERE
+              builder: (context, snapshot) {
+                return ListView(
+                  children: [
+                    ListTile(
+                      title: const Text('Chat Room 1'),
+                      subtitle: const Text('Lorem ipsum dolor sit amet.'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MessagingScreen(
+                                    chatRoomName: "Chat Room 1",
+                                  )),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      title: const Text('Chat Room 2'),
+                      subtitle: const Text('Consectetur adipiscing elit.'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MessagingScreen(
+                                    chatRoomName: "Chat Room 2",
+                                  )),
+                        );
+                      },
+                    ),
+                    // Add more chat rooms here
+                  ],
+                );
+              }
             ),
           ),
         ],
