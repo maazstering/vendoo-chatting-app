@@ -1,13 +1,20 @@
-// import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 // import 'screens/signup/ui/signup.dart';
 import 'screens/home/ui/homepage.dart';
 //import 'screens/chat/ui/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 // import 'screens/login/ui/login.dart';
-// import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+      options: const FirebaseOptions(
+          apiKey: "AIzaSyCxZ-1e4LBtxYpi82i86yTRjl9NBgu1I-k",
+          appId: "1:119840048542:android:424448d97c606e3cb8028f",
+          messagingSenderId: "119840048542",
+          projectId: "vendoo-chat"));
   runApp(const MyApp());
 }
 
@@ -47,5 +54,3 @@ class ThemeProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
-
-

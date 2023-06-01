@@ -9,6 +9,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginPageSignUpPageNavigateEvent>((event, emit) {
       emit(SignUpPageNavigateState());
     });
-    // TODO: add the submit button event handler here
+    on<LoginPageSubmitButtonPressedEvent>((event, emit) {
+      emit(LoginSubmittedInfoState());
+    });
   }
 }

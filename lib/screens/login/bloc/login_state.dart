@@ -11,10 +11,12 @@ abstract class LoginActionState extends LoginState{}
 
 class LoginInitial extends LoginState {}
 
-class LoadingSubmitState extends LoginState {}
+class LoginSubmittedInfoState extends LoginState{}
 
-class SuccessfulSubmitState extends LoginState {}
+// class LoadingSubmitState extends LoginState {}
 
-class ErrorSubmitState extends LoginState{}
+// class SuccessfulSubmitState extends LoginState {}
+
+// class ErrorSubmitState extends LoginState{}
 
 class SignUpPageNavigateState extends LoginActionState {}

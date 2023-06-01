@@ -9,12 +9,13 @@ class ChatRoomJoiningPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        //automaticallyImplyLeading: false,
         title: const Text('Chat Rooms'),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Image.asset(
-              'assets/ventooV.png', // Assuming the logo file is in the assets folder
+              'assets/images/ventooV.png', // Assuming the logo file is in the assets folder
               width: 30,
               height: 30,
             ),

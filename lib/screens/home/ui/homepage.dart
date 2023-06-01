@@ -36,6 +36,9 @@ class HomePage extends StatelessWidget {
         builder: (context, state) {
           final homeBloc = BlocProvider.of<HomeBloc>(context);
           return Scaffold(
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+            ),
             body: Stack(
               children: [
                 Center(
@@ -43,7 +46,7 @@ class HomePage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(
-                        'assets/Ventoo.png',
+                        'assets/images/Ventoo.png',
                         width: 200,
                         height: 200,
                       ),

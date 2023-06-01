@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import '../../login/ui/login.dart';
 
@@ -9,7 +11,9 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  FirebaseAuth auth = FirebaseAuth.instance;
   bool passwordsMatch = true;
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
@@ -18,6 +22,19 @@ class _SignupPageState extends State<SignupPage> {
       passwordsMatch =
           passwordController.text == confirmPasswordController.text;
     });
+  }
+
+  Future<void> signUp() async {
+    if (passwordsMatch) {
+      try{
+        await auth.createUserWithEmailAndPassword(
+          email: emailController.text.trim(),
+          password: passwordController.text.trim());
+      }
+      on FirebaseAuthException catch (e){
+        print(e);
+      }
+    }
   }
 
   @override
@@ -30,11 +47,13 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Sign Up Page'), actions: [
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text('Sign Up Page'), actions: [
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Image.asset(
-            'assets/ventooV.png', // Assuming the logo file is in the assets folder
+            'assets/images/ventooV.png', // Assuming the logo file is in the assets folder
             width: 30,
             height: 30,
           ),
@@ -48,12 +67,13 @@ class _SignupPageState extends State<SignupPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Image.asset(
-                'assets/Ventoo.png',
+                'assets/images/Ventoo.png',
                 width: 150,
                 height: 150,
               ),
               const SizedBox(height: 30),
               TextFormField(
+                controller: emailController,
                 decoration: const InputDecoration(
                   labelText: 'Email',
                 ),
@@ -81,7 +101,7 @@ class _SignupPageState extends State<SignupPage> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  // Perform sign-up action
+                  signUp();
                 },
                 child: const Text('Sign Up'),
               ),
