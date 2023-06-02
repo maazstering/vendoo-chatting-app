@@ -25,15 +25,14 @@ class APIs {
   }
 
   static Future<void> getSelfInfo() async {
-          await firestore.collection('Users').doc(user.uid).get().then((user) async {
-            if (user.exists){
-              me = ChatUser.fromJson(user.data()!);
-            }else{
-              await createUser().then((value) => getSelfInfo());
-            }
-          });
-    }
-
+    await firestore.collection('Users').doc(user.uid).get().then((user) async {
+      if (user.exists) {
+        me = ChatUser.fromJson(user.data()!);
+      } else {
+        await createUser().then((value) => getSelfInfo());
+      }
+    });
+  }
 
   //creating a new user
   static Future<void> createUser() async {
@@ -41,7 +40,7 @@ class APIs {
     print("user object created");
     final chatUser = ChatUser(
         id: user.uid,
-        name:  'new user',//user.displayName.toString(),
+        name: 'new user', //user.displayName.toString(),
         email: user.email.toString(),
         about: "Hey I am using vendoo",
         image: user.photoURL.toString(),
@@ -58,20 +57,23 @@ class APIs {
   }
 
   // for getting all users from firestore database
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers(){
-    return firestore.collection('Users').where('id', isNotEqualTo: user.uid).snapshots();
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers() {
+    return firestore
+        .collection('Users')
+        .where('id', isNotEqualTo: user.uid)
+        .snapshots();
   }
-
 
 // updating the user info in the firestore database
-static Future<void> updateUserInfo() async {
-  await firestore.collection('Users').doc(user.uid).update({'name' :  me.name, 'about': me.about});
-
+  static Future<void> updateUserInfo() async {
+    await firestore
+        .collection('Users')
+        .doc(user.uid)
+        .update({'name': me.name, 'about': me.about});
   }
 
-static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(){
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(
+      ChatUser user) {
     return firestore.collection('Messages').snapshots();
   }
 }
-
-

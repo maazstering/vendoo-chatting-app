@@ -26,38 +26,36 @@ class _SignupPageState extends State<SignupPage> {
 
   // keep the signup method like this for debuggin purposes
   Future<void> signUp() async {
-  if (passwordsMatch) {
-    try {
-      final String email = emailController.text.trim();
-      final String password = passwordController.text.trim();
+    if (passwordsMatch) {
+      try {
+        final String email = emailController.text.trim();
+        final String password = passwordController.text.trim();
 
-      print('Email: $email');
-      print('Password: $password');
+        print('Email: $email');
+        print('Password: $password');
 
-      UserCredential userCredential = await APIs.auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+        UserCredential userCredential =
+            await APIs.auth.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
 
-      if (userCredential != null && userCredential.user != null) {
-        // User creation successful
-        await APIs.createUser();
-      } else {
-        // User creation failed
-        print('User creation failed: userCredential or user is null.');
+        if (userCredential != null && userCredential.user != null) {
+          // User creation successful
+          await APIs.createUser();
+        } else {
+          // User creation failed
+          print('User creation failed: userCredential or user is null.');
+        }
+      } on FirebaseAuthException catch (e) {
+        print('FirebaseAuthException: ${e.code} - ${e.message}');
+      } catch (e) {
+        print('Error: $e');
       }
-    } on FirebaseAuthException catch (e) {
-      print('FirebaseAuthException: ${e.code} - ${e.message}');
-    } catch (e) {
-      print('Error: $e');
     }
   }
-}
 
-
-  Future<void> createUser() async{
-
-  }
+  Future<void> createUser() async {}
 
   @override
   void dispose() {
@@ -125,7 +123,10 @@ class _SignupPageState extends State<SignupPage> {
               ElevatedButton(
                 onPressed: () {
                   signUp();
-                  Navigator.push(context, MaterialPageRoute (builder: (context) => ChatRoomJoiningPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChatRoomJoiningPage()));
                 },
                 child: const Text('Sign Up'),
               ),

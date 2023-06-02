@@ -41,13 +41,12 @@ class _AccountPageState extends State<AccountPage> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return Form(
-      key:  formkey,
+      key: formkey,
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: true,
@@ -74,8 +73,10 @@ class _AccountPageState extends State<AccountPage> {
             const SizedBox(height: 16.0),
             isEditing
                 ? TextFormField(
-                  onSaved: (value) => APIs.me.name = value ?? '',
-                  validator: (value) => value != null && value.isNotEmpty ? null : 'Required Field',
+                    onSaved: (value) => APIs.me.name = value ?? '',
+                    validator: (value) => value != null && value.isNotEmpty
+                        ? null
+                        : 'Required Field',
                     controller: nameController,
                     decoration: InputDecoration(
                       labelText: 'Name',
@@ -87,8 +88,10 @@ class _AccountPageState extends State<AccountPage> {
                   ),
             isEditing
                 ? TextFormField(
-                  onSaved: (value) => APIs.me.about = value ?? '',
-                  validator: (value) => value != null && value.isNotEmpty ? null : 'Required Field',
+                    onSaved: (value) => APIs.me.about = value ?? '',
+                    validator: (value) => value != null && value.isNotEmpty
+                        ? null
+                        : 'Required Field',
                     controller: bioController,
                     decoration: InputDecoration(
                       labelText: 'About',
@@ -113,17 +116,16 @@ class _AccountPageState extends State<AccountPage> {
         bottomNavigationBar: showSaveButton
             ? ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: theme.primaryColor, // Use app's primary color as button background
+                  primary: theme
+                      .primaryColor, // Use app's primary color as button background
                 ),
                 onPressed: () {
-                  if(formkey.currentState!.validate()){
+                  if (formkey.currentState!.validate()) {
                     print('inside validator');
                     formkey.currentState!.save();
                     APIs.updateUserInfo();
-                  toggleEditing(); 
+                    toggleEditing();
                   }
-
-
                 },
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 12.0),

@@ -18,24 +18,33 @@ class chatUserCard extends StatefulWidget {
 class _chatUserCardState extends State<chatUserCard> {
   @override
   Widget build(BuildContext context) {
-    return  Card(
-      margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      elevation: 0.5,
+    return Card(
+        margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        elevation: 0.5,
         child: InkWell(
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (_) =>MessagingScreen(user: APIs.me,)));
-          },
-            child:  ListTile(
-      leading: CachedNetworkImage(
-        imageUrl: widget.user.image,
-        placeholder: (context, url) => const CircularProgressIndicator(),
-        errorWidget: (context, url, error) => const CircleAvatar(child : Icon(CupertinoIcons.person))
-     ),
-      //CircleAvatar(child: Icon(CupertinoIcons.person)),
-      title: Text(widget.user.name),
-      subtitle: Text(widget.user.about, maxLines: 1),
-      trailing: Text('12:00 PM', style: TextStyle(color: Colors.black54),),
-    )));
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => MessagingScreen(
+                            user: APIs.me,
+                          )));
+            },
+            child: ListTile(
+              leading: CachedNetworkImage(
+                  imageUrl: widget.user.image,
+                  placeholder: (context, url) =>
+                      const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) =>
+                      const CircleAvatar(child: Icon(CupertinoIcons.person))),
+              //CircleAvatar(child: Icon(CupertinoIcons.person)),
+              title: Text(widget.user.name),
+              subtitle: Text(widget.user.about, maxLines: 1),
+              trailing: Text(
+                '12:00 PM',
+                style: TextStyle(color: Colors.black54),
+              ),
+            )));
   }
 }
