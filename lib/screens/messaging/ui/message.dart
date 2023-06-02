@@ -4,8 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../api/apis.dart';
 import '../../../models/chat_user.dart';
 import '../../../models/messages.dart';
+import '../../../widgets/message_card.dart';
 import '../../account/ui/account.dart';
 
 class MessagingScreen extends StatefulWidget {
@@ -32,20 +34,45 @@ class _MessagingScreenState extends State<MessagingScreen> {
             automaticallyImplyLeading: false,
             flexibleSpace: _appBar(),
           ),
-          backgroundColor: const Color.fromARGB(255, 234, 248, 255),
+          backgroundColor: Color.fromARGB(255, 226, 209, 240),
           body: Column(
             children: [
               Expanded(
-                child: ListView.builder(
-                  reverse: true,
-                  itemCount: _list.length,
-                  padding: const EdgeInsets.only(top: 8),
-                  physics: const BouncingScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return Container(
-                      // Replace with your custom message widget
-                      child: Text(_list[index].sent),
-                    );
+                child: StreamBuilder(
+                  stream: APIs.getAllMessages(widget.user),
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      //if data is loading
+                      case ConnectionState.waiting:
+                      case ConnectionState.none:
+                        return const SizedBox();
+
+                      //if some or all data is loaded then show it
+                      case ConnectionState.active:
+                      case ConnectionState.done:
+                        final data = snapshot.data?.docs;
+                        _list = data
+                                ?.map((e) => Message.fromJson(e.data()))
+                                .toList() ??
+                            [];
+
+                        if (_list.isNotEmpty) {
+                          return ListView.builder(
+                              reverse: true,
+                              itemCount: _list.length,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              physics: const BouncingScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return MessageCard(message: _list[index]);
+                              });
+                        } else {
+                          return const Center(
+                            child: Text('Say Hii! 👋',
+                                style: TextStyle(fontSize: 20)),
+                          );
+                        }
+                    }
                   },
                 ),
               ),
@@ -53,7 +80,8 @@ class _MessagingScreenState extends State<MessagingScreen> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
                 ),
@@ -64,7 +92,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                   child: EmojiPicker(
                     textEditingController: _textController,
                     config: Config(
-                      bgColor: const Color.fromARGB(255, 234, 248, 255),
+                      bgColor: Color.fromARGB(255, 243, 234, 255),
                       columns: 8,
                       emojiSizeMax: 32,
                     ),
@@ -148,7 +176,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                     },
                     icon: const Icon(
                       Icons.emoji_emotions,
-                      color: Colors.blueAccent,
+                      color: Colors.purpleAccent,
                       size: 25,
                     ),
                   ),
@@ -184,7 +212,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                     },
                     icon: const Icon(
                       Icons.image,
-                      color: Colors.blueAccent,
+                      color: Colors.purpleAccent,
                       size: 26,
                     ),
                   ),
@@ -207,7 +235,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                     },
                     icon: const Icon(
                       Icons.camera_alt_rounded,
-                      color: Colors.blueAccent,
+                      color: Color.fromARGB(255, 118, 68, 255),
                       size: 26,
                     ),
                   ),
@@ -243,7 +271,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
               left: 10,
             ),
             shape: const CircleBorder(),
-            color: Colors.green,
+            color: const Color.fromARGB(255, 118, 68, 255),
             child: const Icon(
               Icons.send,
               color: Colors.white,

@@ -7,7 +7,6 @@ import 'package:vendoo/models/chat_user.dart';
 import 'package:vendoo/screens/newroom/ui/newroom.dart';
 import 'package:vendoo/screens/account/ui/account.dart';
 import '../../../widgets/chat_user_card.dart';
-import '../../../models/chat_user.dart';
 
 class ChatRoomJoiningPage extends StatefulWidget {
   ChatRoomJoiningPage({super.key});
@@ -22,6 +21,7 @@ class _ChatRoomJoiningPageState extends State<ChatRoomJoiningPage> {
     super.initState();
     APIs.getSelfInfo();
   }
+
   List<ChatUser> list = [];
 
   @override
@@ -35,7 +35,10 @@ class _ChatRoomJoiningPageState extends State<ChatRoomJoiningPage> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AccountPage(user: APIs.me,)),
+                MaterialPageRoute(
+                    builder: (context) => AccountPage(
+                          user: APIs.me,
+                        )),
               );
             },
             child: const Padding(
