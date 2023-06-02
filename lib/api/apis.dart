@@ -2,14 +2,46 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:flutter/material.dart';
 import 'package:vendoo/models/chat_user.dart';
-import 'package:vendoo/widgets/chat_user_card.dart';
 
 import '../models/messages.dart';
 
+final User? cuser = FirebaseAuth.instance.currentUser;
+
 class APIs {
   static FirebaseAuth auth = FirebaseAuth.instance;
-
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
+  static String? cuser; // replace with actual user UID (Firebase User UID)
+
+  static Future<void> sendMessage(
+      ChatUser chatUser, String msg, Type type) async {
+    final time = DateTime.now().millisecondsSinceEpoch.toString();
+
+    final Message message = Message(
+        toId: chatUser.id,
+        msg: msg,
+        read: '',
+        type: type,
+        fromId: cuser.toString(),
+        sent: time);
+
+    final ref = firestore
+        .collection('Chats/${getConversationID(chatUser.id)}/Messages/');
+    await ref.doc(time).set(message.toJson());
+
+    final receiverRef =
+        firestore.collection('Users').doc(chatUser.id).collection('Messages');
+    await receiverRef.doc(time).set(message.toJson());
+  }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(
+      ChatUser user) {
+    return firestore
+        .collection('Users')
+        .doc(cuser)
+        .collection('Messages')
+        .orderBy('sent', descending: true)
+        .snapshots();
+  }
 
   //get instance of the current user
   static User get user => auth.currentUser!;
@@ -59,6 +91,16 @@ class APIs {
         .set(chatUser.toJson());
   }
 
+  static Future<void> sendFirstMessage(
+      ChatUser chatUser, String msg, Type type) async {
+    await firestore
+        .collection('users')
+        .doc(chatUser.id)
+        .collection('my_users')
+        .doc(user.uid)
+        .set({}).then((value) => sendMessage(chatUser, msg, type));
+  }
+
   // for getting all users from firestore database
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers() {
     return firestore
@@ -75,45 +117,16 @@ class APIs {
         .update({'name': me.name, 'about': me.about});
   }
 
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(
-      ChatUser user) {
-    return firestore.collection('Messages').snapshots();
-  }
+  // static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(
+  //     ChatUser user) {
+  //   return firestore.collection('Messages').snapshots();
+  // }
 
-  static Future<void> sendFirstMessage(
-      ChatUser chatUser, String msg, Type type) async {
-    await firestore
-        .collection('Users')
-        .doc(chatUser.id)
-        .collection('my_users')
-        .doc(user.uid)
-        .set({}).then((value) => sendMessage(chatUser, msg, type));
-  }
-
-  // useful for getting conversation id
-  static String getConversationID(String id) => user.uid.hashCode <= id.hashCode
-      ? '${user.uid}_$id'
-      : '${id}_${user.uid}';
-
-  // for sending message
-  static Future<void> sendMessage(
-      ChatUser chatUser, String msg, Type type) async {
-    //message sending time (also used as id)
-    final time = DateTime.now().millisecondsSinceEpoch.toString();
-
-    //message to send
-    final Message message = Message(
-        toId: chatUser.id,
-        msg: msg,
-        read: '',
-        type: type,
-        fromId: user.uid,
-        sent: time);
-
-    final ref = firestore
-        .collection('Chats/${getConversationID(chatUser.id)}/Messages/');
-    await ref.doc(time).set(message.toJson()); //
-    //.then((value) =>
-    //    sendPushNotification(chatUser, type == Type.text ? msg : 'image'));
+  static getConversationID(String id) {
+    if (cuser!.compareTo(id) > 0) {
+      return cuser! + '-' + id;
+    } else {
+      return id + '-' + cuser!;
+    }
   }
 }

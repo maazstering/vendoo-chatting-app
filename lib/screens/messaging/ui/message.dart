@@ -9,6 +9,50 @@ import '../../../models/chat_user.dart';
 import '../../../models/messages.dart';
 import '../../../widgets/message_card.dart';
 import '../../account/ui/account.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class Messages extends StatelessWidget {
+  final ChatUser user;
+
+  Messages({required this.user});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: StreamBuilder(
+        stream: APIs.getAllMessages(user),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData) {
+            List<Message> messages = snapshot.data!.docs
+                .map((doc) =>
+                    Message.fromJson(doc.data() as Map<String, dynamic>))
+                .toList();
+            messages = messages
+                .where((message) =>
+                    (message.fromId == APIs.cuser && message.toId == user.id) ||
+                    (message.fromId == user.id && message.toId == APIs.cuser))
+                .toList();
+            return ListView.builder(
+              reverse: true,
+              itemCount: messages.length,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              physics: const BouncingScrollPhysics(),
+              itemBuilder: (context, index) {
+                return MessageCard(
+                    message: messages[
+                        index]); // replace with actual MessageCard widget
+              },
+            );
+          } else {
+            return const Center(
+              child: Text('Say Hii! 👋', style: TextStyle(fontSize: 20)),
+            );
+          }
+        },
+      ),
+    );
+  }
+}
 
 class MessagingScreen extends StatefulWidget {
   final ChatUser user;
