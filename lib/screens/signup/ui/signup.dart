@@ -23,20 +23,36 @@ class _SignupPageState extends State<SignupPage> {
     });
   }
 
+  // keep the signup method like this for debuggin purposes
   Future<void> signUp() async {
-    if (passwordsMatch) {
-      await APIs.createUser().then((value) async{
-      try {
-        await APIs.auth.createUserWithEmailAndPassword(
-            email: emailController.text.trim(),
-            password: passwordController.text.trim());
-      } on FirebaseAuthException catch (e) {
-        print(e);
-      }
-    }
+  if (passwordsMatch) {
+    try {
+      final String email = emailController.text.trim();
+      final String password = passwordController.text.trim();
+
+      print('Email: $email');
+      print('Password: $password');
+
+      UserCredential userCredential = await APIs.auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
       );
+
+      if (userCredential != null && userCredential.user != null) {
+        // User creation successful
+        await APIs.createUser();
+      } else {
+        // User creation failed
+        print('User creation failed: userCredential or user is null.');
+      }
+    } on FirebaseAuthException catch (e) {
+      print('FirebaseAuthException: ${e.code} - ${e.message}');
+    } catch (e) {
+      print('Error: $e');
     }
   }
+}
+
 
   Future<void> createUser() async{
 
