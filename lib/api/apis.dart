@@ -62,11 +62,16 @@ class APIs {
     return firestore.collection('Users').where('id', isNotEqualTo: user.uid).snapshots();
   }
 
+
+// updating the user info in the firestore database
 static Future<void> updateUserInfo() async {
   await firestore.collection('Users').doc(user.uid).update({'name' :  me.name, 'about': me.about});
 
   }
-  
+
+static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(){
+    return firestore.collection('Messages').snapshots();
+  }
 }
 
 
