@@ -28,7 +28,7 @@ class _chatUserCardState extends State<chatUserCard> {
                   context,
                   MaterialPageRoute(
                       builder: (_) => MessagingScreen(
-                            user: APIs.me,
+                            user: widget.user,
                           )));
             },
             child: ListTile(
