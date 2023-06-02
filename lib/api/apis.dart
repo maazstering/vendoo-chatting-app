@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+//import 'package:flutter/material.dart';
 import 'package:vendoo/models/chat_user.dart';
 
 class APIs {
@@ -61,4 +61,12 @@ class APIs {
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers(){
     return firestore.collection('Users').where('id', isNotEqualTo: user.uid).snapshots();
   }
+
+static Future<void> updateUserInfo() async {
+  await firestore.collection('Users').doc(user.uid).update({'name' :  me.name, 'about': me.about});
+
+  }
+  
 }
+
+

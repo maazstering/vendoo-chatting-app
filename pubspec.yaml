@@ -49,6 +49,7 @@ dependencies:
   flutter_rating_bar: 
   cupertino_icons: ^1.0.2
   firebase_core: ^2.13.1 
+  emoji_picker_flutter: ^1.6.0
 
 dev_dependencies:
   flutter_test:

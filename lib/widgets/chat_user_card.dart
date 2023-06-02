@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:vendoo/screens/messaging/ui/message.dart';
+import '../api/apis.dart';
 import '../models/chat_user.dart';
 
 class chatUserCard extends StatefulWidget {
@@ -20,7 +23,9 @@ class _chatUserCardState extends State<chatUserCard> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       elevation: 0.5,
         child: InkWell(
-          onTap: (){},
+          onTap: (){
+            Navigator.push(context, MaterialPageRoute(builder: (_) =>MessagingScreen(user: APIs.me,)));
+          },
             child:  ListTile(
       leading: CachedNetworkImage(
         imageUrl: widget.user.image,
