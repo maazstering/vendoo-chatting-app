@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../../api/apis.dart';
+import '../../../models/chat_user.dart';
 import 'package:vendoo/screens/home/ui/homepage.dart';
 
 class AccountPage extends StatelessWidget {
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  late ChatUser user;
+  //final FirebaseAuth auth = FirebaseAuth.instance;
+  AccountPage({required this.user});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,13 +34,13 @@ class AccountPage extends StatelessWidget {
             child: Icon(Icons.account_circle, size: 150),
           ),
           const SizedBox(height: 16.0),
-          const ListTile(
+          ListTile(
             leading: Icon(Icons.person),
-            title: Text('John Doe'),
+            title: Text('${user.name}'),
           ),
-          const ListTile(
+          ListTile(
             leading: Icon(Icons.email),
-            title: Text('johndoe@example.com'),
+            title: Text('${user.email}'),
           ),
           ListTile(
             leading: Icon(Icons.edit),
@@ -62,7 +66,7 @@ class AccountPage extends StatelessWidget {
 
 void signOut() async {
   try {
-    await FirebaseAuth.instance.signOut();
+    await APIs.auth.signOut();
   } catch (e) {
     print('Error signing out: $e');
   }

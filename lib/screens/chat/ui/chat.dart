@@ -36,7 +36,7 @@ class _ChatRoomJoiningPageState extends State<ChatRoomJoiningPage> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AccountPage()),
+                MaterialPageRoute(builder: (context) => AccountPage(user: APIs.me,)),
               );
             },
             child: const Padding(

@@ -27,6 +27,9 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> login() async {
     try {
+      print("login working");
+      print(emailController.text);
+      print(passwordController.text);
       await APIs.auth.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
