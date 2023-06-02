@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:vendoo/screens/chat/ui/chat.dart';
 import '../../../api/apis.dart';
 import 'package:flutter/material.dart';
 import '../../login/ui/login.dart';
@@ -124,6 +125,7 @@ class _SignupPageState extends State<SignupPage> {
               ElevatedButton(
                 onPressed: () {
                   signUp();
+                  Navigator.push(context, MaterialPageRoute (builder: (context) => ChatRoomJoiningPage()));
                 },
                 child: const Text('Sign Up'),
               ),

@@ -41,7 +41,7 @@ class APIs {
     print("user object created");
     final chatUser = ChatUser(
         id: user.uid,
-        name: user.displayName.toString(),
+        name:  'new user',//user.displayName.toString(),
         email: user.email.toString(),
         about: "Hey I am using vendoo",
         image: user.photoURL.toString(),
