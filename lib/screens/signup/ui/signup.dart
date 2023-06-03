@@ -8,10 +8,10 @@ class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
 
   @override
-  _SignupPageState createState() => _SignupPageState();
+  SignupPageState createState() => SignupPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class SignupPageState extends State<SignupPage> {
   bool passwordsMatch = true;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -153,19 +153,3 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 }
-
-// Future<void> signUp() async {
-
-//     if (passwordsMatch) {
-//       await APIs.createUser().then((value) async{
-//       try {
-//         await APIs.auth.createUserWithEmailAndPassword(
-//             email: emailController.text.trim(),
-//             password: passwordController.text.trim());
-//       } on FirebaseAuthException catch (e) {
-//         print(e);
-//       }
-//       }
-//       );
-//     }
-//   }

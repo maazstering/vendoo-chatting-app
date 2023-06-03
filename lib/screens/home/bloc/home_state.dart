@@ -1,6 +1,6 @@
 part of 'home_bloc.dart';
 
-abstract class HomeState extends Equatable {
+abstract class HomeState {
   const HomeState();
   
   @override
@@ -13,9 +13,9 @@ class HomeInitial extends HomeState {}
 
 class HomeLoadedSuccessState extends HomeState{}
 
-class HomeLoadingState extends HomeState{}
+// class HomeLoadingState extends HomeState{}
 
-class HomeErrorState extends HomeState{}
+// class HomeErrorState extends HomeState{}
 
 class HomeLoginPageNavigateActionState extends HomeActionState{
 }

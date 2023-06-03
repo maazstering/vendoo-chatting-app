@@ -1,4 +1,4 @@
-import 'dart:js';
+//import 'dart:js';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -34,10 +34,10 @@ class MessageCard extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.all(message.type as double),
             margin: EdgeInsets.symmetric(
-              horizontal:
-                  MediaQuery.of(context as BuildContext).size.width * .04,
-              vertical:
-                  MediaQuery.of(context as BuildContext).size.height * .01,
+              horizontal: 40,
+                  // MediaQuery.of(context as BuildContext).size.width * .04,
+              vertical: 20,
+                  // MediaQuery.of(context as BuildContext).size.height * .01,
             ),
             decoration: BoxDecoration(
               color: const Color.fromARGB(255, 221, 245, 255),
@@ -71,7 +71,8 @@ class MessageCard extends StatelessWidget {
         //message time
         Padding(
           padding: EdgeInsets.only(
-            right: MediaQuery.of(context as BuildContext).size.width * .04,
+            right: 40
+            // MediaQuery.of(context as BuildContext).size.width * .04,
           ),
           child: Text(
             message.sent
@@ -114,13 +115,16 @@ class MessageCard extends StatelessWidget {
         Flexible(
           child: Container(
             padding: EdgeInsets.all(message.type == Type.image
-                ? MediaQuery.of(context as BuildContext).size.width * .03
-                : MediaQuery.of(context as BuildContext).size.width * .04),
+                ? 35
+                //MediaQuery.of(context as BuildContext).size.width * .03
+                : 40
+                //MediaQuery.of(context as BuildContext).size.width * .04
+                ),
             margin: EdgeInsets.symmetric(
-              horizontal:
-                  MediaQuery.of(context as BuildContext).size.width * .04,
-              vertical:
-                  MediaQuery.of(context as BuildContext).size.height * .01,
+              horizontal: 40,
+                  //MediaQuery.of(context as BuildContext).size.width * .04,
+              vertical: 20
+                  //MediaQuery.of(context as BuildContext).size.height * .01,
             ),
             decoration: BoxDecoration(
               color: const Color.fromARGB(255, 218, 255, 176),

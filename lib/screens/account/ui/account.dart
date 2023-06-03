@@ -10,10 +10,10 @@ class AccountPage extends StatefulWidget {
   AccountPage({required this.user});
 
   @override
-  _AccountPageState createState() => _AccountPageState();
+  AccountPageState createState() => AccountPageState();
 }
 
-class _AccountPageState extends State<AccountPage> {
+class AccountPageState extends State<AccountPage> {
   final formkey = GlobalKey<FormState>();
   bool isEditing = false;
   bool showSaveButton = false;

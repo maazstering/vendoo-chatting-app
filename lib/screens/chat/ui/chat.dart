@@ -12,10 +12,10 @@ class ChatRoomJoiningPage extends StatefulWidget {
   ChatRoomJoiningPage({super.key});
 
   @override
-  State<ChatRoomJoiningPage> createState() => _ChatRoomJoiningPageState();
+  State<ChatRoomJoiningPage> createState() => ChatRoomJoiningPageState();
 }
 
-class _ChatRoomJoiningPageState extends State<ChatRoomJoiningPage> {
+class ChatRoomJoiningPageState extends State<ChatRoomJoiningPage> {
   @override
   initState() {
     super.initState();

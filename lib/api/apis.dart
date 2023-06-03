@@ -25,20 +25,20 @@ class APIs {
         sent: time);
 
     final ref = firestore
-        .collection('Chats/${getConversationID(chatUser.id)}/Messages/');
+        .collection('chats/${getConversationID(chatUser.id)}/messages/');
     await ref.doc(time).set(message.toJson());
 
     final receiverRef =
-        firestore.collection('Users').doc(chatUser.id).collection('Messages');
+        firestore.collection('users').doc(chatUser.id).collection('messages');
     await receiverRef.doc(time).set(message.toJson());
   }
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(
       ChatUser user) {
     return firestore
-        .collection('Users')
+        .collection('users')
         .doc(cuser)
-        .collection('Messages')
+        .collection('messages')
         .orderBy('sent', descending: true)
         .snapshots();
   }
@@ -53,14 +53,14 @@ class APIs {
   static Future<bool> userExists() async {
     if (user != null) {
       final userSnapshot =
-          await firestore.collection('Users').doc(user.uid).get();
+          await firestore.collection('users').doc(user.uid).get();
       return userSnapshot.exists;
     }
     return false;
   }
 
   static Future<void> getSelfInfo() async {
-    await firestore.collection('Users').doc(user.uid).get().then((user) async {
+    await firestore.collection('users').doc(user.uid).get().then((user) async {
       if (user.exists) {
         me = ChatUser.fromJson(user.data()!);
       } else {
@@ -72,7 +72,7 @@ class APIs {
   //creating a new user
   static Future<void> createUser() async {
     final time = DateTime.now().microsecondsSinceEpoch.toString();
-    print("user object created");
+    //print("user object created");
     final chatUser = ChatUser(
         id: user.uid,
         name: 'new user', //user.displayName.toString(),
@@ -86,13 +86,14 @@ class APIs {
 
     //adding the user to the firestore collection
     return await firestore
-        .collection('Users')
+        .collection('users')
         .doc(user.uid)
         .set(chatUser.toJson());
   }
 
   static Future<void> sendFirstMessage(
       ChatUser chatUser, String msg, Type type) async {
+        //print('inside first message');
     await firestore
         .collection('users')
         .doc(chatUser.id)
@@ -104,7 +105,7 @@ class APIs {
   // for getting all users from firestore database
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers() {
     return firestore
-        .collection('Users')
+        .collection('users')
         .where('id', isNotEqualTo: user.uid)
         .snapshots();
   }
@@ -112,7 +113,7 @@ class APIs {
 // updating the user info in the firestore database
   static Future<void> updateUserInfo() async {
     await firestore
-        .collection('Users')
+        .collection('users')
         .doc(user.uid)
         .update({'name': me.name, 'about': me.about});
   }

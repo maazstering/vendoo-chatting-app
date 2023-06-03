@@ -12,7 +12,8 @@ import '../bloc/home_bloc.dart';
 class HomePage extends StatelessWidget {
   final HomeBloc homeBloc = HomeBloc();
 
-  HomePage({required Key key}) : super(key: key);
+  HomePage({Key? key});
+
 
   @override
   Widget build(BuildContext context) {
