@@ -45,7 +45,7 @@ class Messages extends StatelessWidget {
             );
           } else {
             return const Center(
-              child: Text('Say Hii! 👋', style: TextStyle(fontSize: 20)),
+              child: Text('Say Hi! 👋', style: TextStyle(fontSize: 20)),
             );
           }
         },
@@ -112,36 +112,17 @@ class _MessagingScreenState extends State<MessagingScreen> {
                               });
                         } else {
                           return const Center(
-                            child: Text('Say Hii! 👋',
+                            child: Text('Say Hi! 👋',
                                 style: TextStyle(fontSize: 20)),
                           );
                         }
+                      default:
+                        return const SizedBox();
                     }
                   },
                 ),
               ),
-              if (_isUploading)
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                ),
-              _chatInput(),
-              if (_showEmoji)
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * .35,
-                  child: EmojiPicker(
-                    textEditingController: _textController,
-                    config: Config(
-                      bgColor: Color.fromARGB(255, 243, 234, 255),
-                      columns: 8,
-                      emojiSizeMax: 32,
-                    ),
-                  ),
-                ),
+              _buildChatControls(),
             ],
           ),
         ),
@@ -150,180 +131,118 @@ class _MessagingScreenState extends State<MessagingScreen> {
   }
 
   Widget _appBar() {
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => AccountPage(user: widget.user),
+    return AppBar(
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+      title: Row(
+        children: [
+          CircleAvatar(
+            radius: 20,
+            // backgroundImage: Icon(Icons.account_circle),
           ),
-        );
-      },
+          SizedBox(width: 10),
+          Text(widget.user.name),
+        ],
+      ),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.account_circle),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AccountPage(user: widget.user),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildChatControls() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
       child: Row(
         children: [
           IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back, color: Colors.black54),
+            icon: Icon(Icons.insert_emoticon),
+            onPressed: () {
+              setState(() {
+                _showEmoji = !_showEmoji;
+              });
+            },
           ),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(24),
-            child: CachedNetworkImage(
-              width: 40,
-              height: 40,
-              imageUrl: widget.user.image,
-              errorWidget: (context, url, error) => const CircleAvatar(
-                child: Icon(CupertinoIcons.person),
+          Expanded(
+            child: TextField(
+              controller: _textController,
+              decoration: InputDecoration(
+                hintText: 'Type a message',
+                border: InputBorder.none,
               ),
             ),
           ),
-          const SizedBox(width: 10),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.user.name,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                widget.user.lastActive,
-                style: const TextStyle(fontSize: 13, color: Colors.black54),
-              ),
-            ],
+          IconButton(
+            icon: Icon(Icons.attach_file),
+            onPressed: () async {
+              await _pickImageFromGallery();
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.send),
+            onPressed: () async {
+              await _sendMessage();
+            },
           ),
         ],
       ),
     );
   }
 
-  Widget _chatInput() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      child: Row(
-        children: [
-          Expanded(
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      FocusScope.of(context).unfocus();
-                      setState(() => _showEmoji = !_showEmoji);
-                    },
-                    icon: const Icon(
-                      Icons.emoji_emotions,
-                      color: Colors.purpleAccent,
-                      size: 25,
-                    ),
-                  ),
-                  Expanded(
-                    child: TextField(
-                      controller: _textController,
-                      keyboardType: TextInputType.multiline,
-                      maxLines: null,
-                      onTap: () {
-                        if (_showEmoji) {
-                          setState(() => _showEmoji = !_showEmoji);
-                        }
-                      },
-                      decoration: const InputDecoration(
-                        hintText: 'Type Something...',
-                        hintStyle: TextStyle(color: Colors.blueAccent),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () async {
-                      final ImagePicker picker = ImagePicker();
-                      final List<XFile> images = await picker.pickMultiImage(
-                        imageQuality: 70,
-                      );
-                      for (var i in images) {
-                        print('Image Path: ${i.path}');
-                        setState(() => _isUploading = true);
-                        // await APIs.sendChatImage(widget.user, File(i.path));
-                        setState(() => _isUploading = false);
-                      }
-                    },
-                    icon: const Icon(
-                      Icons.image,
-                      color: Colors.purpleAccent,
-                      size: 26,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () async {
-                      final ImagePicker picker = ImagePicker();
-                      final XFile? image = await picker.pickImage(
-                        source: ImageSource.camera,
-                        imageQuality: 70,
-                      );
-                      if (image != null) {
-                        print('Image Path: ${image.path}');
-                        setState(() => _isUploading = true);
-                        // await APIs.sendChatImage(
-                        //   widget.user,
-                        //   File(image.path),
-                        // );
-                        setState(() => _isUploading = false);
-                      }
-                    },
-                    icon: const Icon(
-                      Icons.camera_alt_rounded,
-                      color: Color.fromARGB(255, 118, 68, 255),
-                      size: 26,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                ],
-              ),
-            ),
-          ),
-          MaterialButton(
-            onPressed: () {
-              if (_textController.text.isNotEmpty) {
-                if (_list.isEmpty) {
-                  APIs.sendFirstMessage(
-                    widget.user,
-                    _textController.text,
-                    Type.text,
-                  );
-                } else {
-                  APIs.sendMessage(
-                    widget.user,
-                    _textController.text,
-                    Type.text,
-                  );
-                }
-                _textController.text = '';
-              }
-            },
-            minWidth: 0,
-            padding: const EdgeInsets.only(
-              top: 10,
-              bottom: 10,
-              right: 5,
-              left: 10,
-            ),
-            shape: const CircleBorder(),
-            color: const Color.fromARGB(255, 118, 68, 255),
-            child: const Icon(
-              Icons.send,
-              color: Colors.white,
-              size: 28,
-            ),
-          ),
-        ],
-      ),
+  Future<void> _pickImageFromGallery() async {
+    final imagePicker = ImagePicker();
+    final pickedImage = await imagePicker.getImage(
+      source: ImageSource.gallery,
     );
+
+    if (pickedImage != null) {
+      setState(() {
+        _isUploading = true;
+      });
+
+      setState(() {
+        _isUploading = false;
+      });
+    }
+  }
+
+  Future<void> _sendMessage() async {
+    final text = _textController.text.trim();
+    if (text.isEmpty) return;
+
+    _textController.clear();
+
+    // await APIs.sendMessage(
+    //   Message(
+    //     fromId: APIs.cuser,
+    //     toId: widget.user.id,
+    //     text: text,
+    //   ),
+    // );
   }
 }

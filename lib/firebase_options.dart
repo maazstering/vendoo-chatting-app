@@ -50,11 +50,13 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCxZ-1e4LBtxYpi82i86yTRjl9NBgu1I-k',
-    appId: '1:119840048542:android:424448d97c606e3cb8028f',
-    messagingSenderId: '119840048542',
-    projectId: 'vendoo-chat',
-    storageBucket: 'vendoo-chat.appspot.com',
+    apiKey:
+        'AIzaSyCxZ-1e4LBtxYpi82i86yTRjl9NBgu1I-k', //AIzaSyCth5jQsM3yzaI4O4Silbwy79CB4KbqCXc
+    appId:
+        '1:119840048542:android:424448d97c606e3cb8028f', //1:575551882451:android:8cf05d8ad4c7616ca1c026
+    messagingSenderId: '119840048542', //575551882451
+    projectId: 'vendoo-chat', //vendoo-bd009
+    storageBucket: 'vendoo-chat.appspot.com', //vendoo-bd009.appspot.com
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
