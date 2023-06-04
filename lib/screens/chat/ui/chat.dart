@@ -23,7 +23,14 @@ class _ChatRoomJoiningPageState extends State<ChatRoomJoiningPage> {
     super.initState();
     APIs.getSelfInfo();
   }
-  List<ChatUser> list = [];
+
+  //for storing all users
+  List<ChatUser> _list = [];
+  
+  // // for storing searched items
+  // final List<ChatUser> _searchList = [];
+  // // for storing search status
+  // bool _isSearching = false;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +43,10 @@ class _ChatRoomJoiningPageState extends State<ChatRoomJoiningPage> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AccountPage(user: APIs.me,)),
+                MaterialPageRoute(
+                    builder: (context) => AccountPage(
+                          user: APIs.me,
+                        )),
               );
             },
             child: const Padding(
@@ -59,16 +69,16 @@ class _ChatRoomJoiningPageState extends State<ChatRoomJoiningPage> {
                     case ConnectionState.active:
                     case ConnectionState.done:
                       final data = snapshot.data?.docs;
-                      list = data
+                      _list = data
                               ?.map((e) => ChatUser.fromJson(e.data()))
                               .toList() ??
                           [];
-                      if (list.isNotEmpty) {
+                      if (_list.isNotEmpty) {
                         return ListView.builder(
-                            itemCount: list.length,
+                            itemCount: _list.length,
                             physics: const BouncingScrollPhysics(),
                             itemBuilder: (context, index) {
-                              return chatUserCard(user: list[index]);
+                              return chatUserCard(user: _list[index]);
                             });
                       } else {
                         return const Center(

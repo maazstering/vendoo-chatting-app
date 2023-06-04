@@ -67,7 +67,7 @@ class AccountPageState extends State<AccountPage> {
           children: [
             const CircleAvatar(
               radius: 80,
-              backgroundImage: AssetImage('assets/images/profile_picture.jpg'),
+              backgroundImage: AssetImage('images/profile_picture.jpg'),// TODO: add proper image path here
               child: Icon(Icons.account_circle, size: 150),
             ),
             const SizedBox(height: 16.0),

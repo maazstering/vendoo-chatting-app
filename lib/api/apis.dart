@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:vendoo/models/chat_user.dart';
+import 'package:vendoo/models/message.dart';
 
 class APIs {
   static FirebaseAuth auth = FirebaseAuth.instance;
@@ -25,15 +26,14 @@ class APIs {
   }
 
   static Future<void> getSelfInfo() async {
-          await firestore.collection('Users').doc(user.uid).get().then((user) async {
-            if (user.exists){
-              me = ChatUser.fromJson(user.data()!);
-            }else{
-              await createUser().then((value) => getSelfInfo());
-            }
-          });
-    }
-
+    await firestore.collection('Users').doc(user.uid).get().then((user) async {
+      if (user.exists) {
+        me = ChatUser.fromJson(user.data()!);
+      } else {
+        await createUser().then((value) => getSelfInfo());
+      }
+    });
+  }
 
   //creating a new user
   static Future<void> createUser() async {
@@ -41,7 +41,7 @@ class APIs {
     print("user object created");
     final chatUser = ChatUser(
         id: user.uid,
-        name:  'new user',//user.displayName.toString(),
+        name: 'new user', //user.displayName.toString(),
         email: user.email.toString(),
         about: "Hey I am using vendoo",
         image: user.photoURL.toString(),
@@ -58,21 +58,50 @@ class APIs {
   }
 
   // for getting all users from firestore database
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers(){
-    return firestore.collection('Users').where('id', isNotEqualTo: user.uid).snapshots();
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers() {
+    return firestore
+        .collection('Users')
+        .where('id', isNotEqualTo: user.uid)
+        .snapshots();
   }
-
 
   //updating user info
-  static  Future<void> updateUserInfo() async{
-    await firestore.collection('Users').doc(user.uid).update(
-      {
-        'name' : me.name,
-        'about' : me.about
-      }
-    );
-
+  static Future<void> updateUserInfo() async {
+    await firestore
+        .collection('Users')
+        .doc(user.uid)
+        .update({'name': me.name, 'about': me.about});
   }
 
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(
+      ChatUser user) {
+    return firestore
+        .collection('Chats/${getConversationID(user.id)}/Messages/')
+        .snapshots();
+  }
 
+  static String getConversationID(String id) => user.uid.hashCode <= id.hashCode
+      ? '${user.uid}_$id'
+      : '${id}_${user.uid}';
+
+  //chats (collection) --> conversation_id (doc) -->  messages(collection) --> message (doc)
+
+  //for sending message
+  static Future<void> sendMessage(ChatUser Chatuser, String msg) async {
+    final time = DateTime.now()
+        .millisecondsSinceEpoch
+        .toString(); // will generate a unique string every time
+    //message to send
+    final Message message = Message(
+        read: '',
+        message: msg,
+        toId: Chatuser.id,
+        type: Type.Text,
+        sent: time,
+        fromId: user.uid);
+
+    final ref = firestore
+        .collection('Chats/${getConversationID(Chatuser.id)}/Messages/');
+    await ref.doc(time).set(message.toJson());
+  }
 }

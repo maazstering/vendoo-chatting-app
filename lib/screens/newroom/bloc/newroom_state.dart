@@ -1,6 +1,6 @@
 part of 'newroom_bloc.dart';
 
-abstract class NewroomState extends Equatable {
+abstract class NewroomState{
   const NewroomState();
   
   @override
