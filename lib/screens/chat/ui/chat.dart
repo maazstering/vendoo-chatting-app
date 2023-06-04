@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vendoo/api/apis.dart';
 import 'package:vendoo/models/chat_user.dart';
@@ -26,34 +27,61 @@ class _ChatRoomJoiningPageState extends State<ChatRoomJoiningPage> {
 
   //for storing all users
   List<ChatUser> _list = [];
-  
-  // // for storing searched items
-  // final List<ChatUser> _searchList = [];
-  // // for storing search status
-  // bool _isSearching = false;
+  // for storing searched items
+  final List<ChatUser> _searchList = [];
+  // for storing search status
+  bool _isSearching = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: const Text('Chat Rooms'),
+        title: _isSearching
+            ? TextField(
+                autofocus: true,
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Search...',
+                ),
+                style: TextStyle(fontSize: 16),
+                //when text changes update search list
+                onChanged: (value) {
+                  //search logic
+                  _searchList.clear();
+
+                  for (var i in _list) {
+                    if (i.name.toLowerCase().contains(value.toLowerCase())) {
+                      _searchList.add(i);
+                      setState(() {
+                        _searchList;
+                      });
+                    }
+                  }
+                },
+              )
+            : const Text('Chat Rooms'),
         actions: [
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AccountPage(
-                          user: APIs.me,
-                        )),
-              );
-            },
-            child: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(Icons.account_circle),
-            ),
-          ),
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  _isSearching = !_isSearching;
+                });
+              },
+              icon: Icon(_isSearching
+                  ? CupertinoIcons.clear_circled_solid
+                  : Icons.search)),
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AccountPage(
+                            user: APIs.me,
+                          )),
+                );
+              },
+              icon: const Icon(Icons.account_circle))
         ],
       ),
       body: Column(
@@ -75,10 +103,10 @@ class _ChatRoomJoiningPageState extends State<ChatRoomJoiningPage> {
                           [];
                       if (_list.isNotEmpty) {
                         return ListView.builder(
-                            itemCount: _list.length,
+                            itemCount: _isSearching  ? _searchList.length : _list.length,
                             physics: const BouncingScrollPhysics(),
                             itemBuilder: (context, index) {
-                              return chatUserCard(user: _list[index]);
+                              return chatUserCard(user: _isSearching ? _searchList[index] : _list[index]);
                             });
                       } else {
                         return const Center(
