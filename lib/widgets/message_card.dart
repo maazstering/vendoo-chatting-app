@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vendoo/api/apis.dart';
+import 'package:vendoo/helper/my_date_util.dart';
 
 import '../models/message.dart';
 
@@ -21,31 +22,39 @@ class _MessageCardState extends State<MessageCard> {
 
   //sender message
   Widget _blueMessage() {
+
+
+    //update last read message if sender and reciever are different
+    if(widget.message.read.isEmpty){
+      APIs.updateMessageReadStatus(widget.message);
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Flexible(
           child: Container(
             decoration: BoxDecoration(
-                color: Color.fromARGB(255, 144, 189, 226),
+                color: const Color.fromARGB(255, 144, 189, 226),
                 border: Border.all(color: Colors.blueAccent),
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),
                     bottomRight: Radius.circular(30))),
-            padding: EdgeInsets.all(15),
-            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            padding: const EdgeInsets.all(15),
+            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             child: Text(
               widget.message.message,
-              style: TextStyle(fontSize: 15, color: Colors.black87),
+              style: const TextStyle(fontSize: 15, color: Colors.black87),
             ),
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(right: 20),
           child: Text(
-            widget.message.sent,
-            style: TextStyle(fontSize: 13, color: Colors.black54),
+            MyDateUtil.getformattedTime(
+                context: context, time: widget.message.sent),
+            style: const TextStyle(fontSize: 13, color: Colors.black54),
           ),
         )
       ],
@@ -59,12 +68,26 @@ class _MessageCardState extends State<MessageCard> {
       children: [
         Row(
           children: [
-            SizedBox(width: 10,),
-            Icon(Icons.done_all_rounded, color: Colors.blueAccent,size: 20,),
-            SizedBox(width: 3,),
+            const SizedBox(
+              width: 10,
+            ),
+
+            //double tick blue icon for message read
+            if (widget.message.read.isNotEmpty)
+              const Icon(
+                Icons.done_all_rounded,
+                color: Colors.blueAccent,
+                size: 20,
+              ),
+            const SizedBox(
+              width: 3,
+            ),
+
+            //sent time
             Text(
-              widget.message.read + '12:00 AM',
-              style: TextStyle(fontSize: 13, color: Colors.black54),
+              MyDateUtil.getformattedTime(
+                  context: context, time: widget.message.sent),
+              style: const TextStyle(fontSize: 13, color: Colors.black54),
             ),
           ],
         ),
@@ -72,16 +95,17 @@ class _MessageCardState extends State<MessageCard> {
           child: Container(
             decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 127, 238, 184),
-                border: Border.all(color: Color.fromARGB(255, 7, 141, 76)),
-                borderRadius: BorderRadius.only(
+                border:
+                    Border.all(color: const Color.fromARGB(255, 7, 141, 76)),
+                borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),
                     bottomLeft: Radius.circular(30))),
-            padding: EdgeInsets.all(15),
-            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            padding: const EdgeInsets.all(15),
+            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             child: Text(
               widget.message.message,
-              style: TextStyle(fontSize: 15, color: Colors.black87),
+              style: const TextStyle(fontSize: 15, color: Colors.black87),
             ),
           ),
         ),
