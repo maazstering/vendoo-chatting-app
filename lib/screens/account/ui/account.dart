@@ -111,6 +111,15 @@ class AccountPageState extends State<AccountPage> {
               title: Text('Edit Profile'),
               onTap: toggleEditing,
             ),
+            ListTile(
+            leading: Icon(Icons.logout),
+            title: Text('Sign Out'),
+            onTap: () {
+              signOut();
+              Navigator.push(context,
+                MaterialPageRoute(builder: (context) =>  HomePage(key: const ValueKey('myHomePage'))));
+            },
+            )
           ],
         ),
         bottomNavigationBar: showSaveButton
