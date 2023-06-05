@@ -30,10 +30,8 @@ class HomePage extends StatelessWidget {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const SignupPage()));
           } else if (state is HomeChatPageNavigateActionState) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ChatRoomJoiningPage()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ChatRoomJoiningPage()));
           }
         },
         builder: (context, state) {
