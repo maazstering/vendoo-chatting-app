@@ -111,6 +111,7 @@ class APIs {
         .collection('Chats/${getConversationID(user.id)}/Messages/').orderBy('sent', descending: true).limit(1).snapshots();
   }
 
+  //updating the user read message status
   static Future<void> updateMessageReadStatus(Message message) async{
     firestore
         .collection('Chats/${getConversationID(message.fromId)}/Messages/').doc(message.sent).update({
@@ -119,5 +120,6 @@ class APIs {
         .toString()
         });
   }
+
 
 }

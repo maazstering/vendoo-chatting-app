@@ -5,7 +5,7 @@ class MyDateUtil{
   static String getformattedTime({
     required BuildContext context, required String time
   }){
-    final date = DateTime.fromMicrosecondsSinceEpoch(int.parse(time));
+    final date = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
     return TimeOfDay.fromDateTime(date).format(context);
   }
 
@@ -14,7 +14,7 @@ class MyDateUtil{
    String getLastMessageTime({
     required BuildContext context, required String time
   }){
-    final DateTime sent  = DateTime.fromMicrosecondsSinceEpoch(int.parse(time));
+    final DateTime sent  = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
     final DateTime now = DateTime.now();
 
     if (now.day == sent.day && now.month == sent.month && now.year == sent.year){

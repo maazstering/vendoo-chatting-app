@@ -1,5 +1,6 @@
-import 'dart:convert';
+import 'dart:io' show Platform;
 
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:vendoo/models/chat_user.dart';
 import 'package:vendoo/widgets/message_card.dart';
@@ -22,51 +23,68 @@ class _MessageScreenState extends State<MessageScreen> {
   //for handling message text changes
   final _textController = TextEditingController();
 
+  // to check whether to show emojis or not
+  bool _showEmoji = false;
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          flexibleSpace: _appBar(),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: StreamBuilder(
-                  stream: APIs.getAllMessages(widget.user),
-                  builder: (context, snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.waiting:
-                      case ConnectionState.none:
-                        return const Center(child: const SizedBox());
-                      case ConnectionState.active:
-                      case ConnectionState.done:
-                        final data = snapshot.data?.docs;
-                        _list = data
-                                ?.map((e) => Message.fromJson(e.data()))
-                                .toList() ??
-                            [];
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            flexibleSpace: _appBar(),
+          ),
+          body: Column(
+            children: [
+              Expanded(
+                child: StreamBuilder(
+                    stream: APIs.getAllMessages(widget.user),
+                    builder: (context, snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                        case ConnectionState.none:
+                          return const Center(child: const SizedBox());
+                        case ConnectionState.active:
+                        case ConnectionState.done:
+                          final data = snapshot.data?.docs;
+                          _list = data
+                                  ?.map((e) => Message.fromJson(e.data()))
+                                  .toList() ??
+                              [];
 
-                        if (_list.isNotEmpty) {
-                          return ListView.builder(
-                              itemCount: _list.length,
-                              physics: const BouncingScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                return MessageCard(
-                                  message: _list[index],
-                                );
-                              });
-                        } else {
-                          return const Center(
-                              child: Text('Say Hiii!👋',
-                                  style: TextStyle(fontSize: 20)));
-                        }
-                    }
-                  }),
-            ),
-            _chatInput()
-          ],
+                          if (_list.isNotEmpty) {
+                            return ListView.builder(
+                                itemCount: _list.length,
+                                physics: const BouncingScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return MessageCard(
+                                    message: _list[index],
+                                  );
+                                });
+                          } else {
+                            return const Center(
+                                child: Text('Say Hiii!👋',
+                                    style: TextStyle(fontSize: 20)));
+                          }
+                      }
+                    }),
+              ),
+              _chatInput(),
+              if(_showEmoji)
+              SizedBox(
+                height: 250,
+                child: EmojiPicker(
+                  textEditingController: _textController,
+                  config: const Config(
+                    columns: 8,
+                    emojiSizeMax: 32,
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -78,7 +96,7 @@ class _MessageScreenState extends State<MessageScreen> {
       child: Row(children: [
         IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: Icon(
+            icon: const Icon(
               Icons.arrow_back,
               color: Colors.black54,
             )),
@@ -95,7 +113,7 @@ class _MessageScreenState extends State<MessageScreen> {
           children: [
             Text(
               widget.user.name,
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 16,
                   color: Colors.black54,
                   fontWeight: FontWeight.bold),
@@ -119,18 +137,26 @@ class _MessageScreenState extends State<MessageScreen> {
                 children: [
                   //emoji button
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        FocusScope.of(context).unfocus();
+                        setState(() => _showEmoji = !_showEmoji);
+                        //add on pressed here
+                      },
                       icon: const Icon(
                         Icons.emoji_emotions,
                         color: Color.fromARGB(255, 135, 13, 156),
                         size: 26,
                       )),
 
-                   Expanded(
+                  //text field
+                  Expanded(
                       child: TextField(
-                        controller: _textController,
+                    controller: _textController,
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
+                    onTap: () {
+                       if(_showEmoji)setState(() => _showEmoji = !_showEmoji);
+                    },
                     decoration: const InputDecoration(
                       hintText: 'Type Something...',
                       hintStyle: TextStyle(color: Colors.purpleAccent),
@@ -138,6 +164,7 @@ class _MessageScreenState extends State<MessageScreen> {
                     ),
                   )),
 
+                  //image from device
                   IconButton(
                       onPressed: () {},
                       icon: const Icon(
@@ -146,6 +173,7 @@ class _MessageScreenState extends State<MessageScreen> {
                         size: 26,
                       )),
 
+                  // image from camera
                   IconButton(
                       onPressed: () {},
                       icon: const Icon(
@@ -164,7 +192,7 @@ class _MessageScreenState extends State<MessageScreen> {
           //send message button
           MaterialButton(
             onPressed: () {
-              if(_textController.text.isNotEmpty){
+              if (_textController.text.isNotEmpty) {
                 APIs.sendMessage(widget.user, _textController.text);
                 _textController.text = '';
               }
