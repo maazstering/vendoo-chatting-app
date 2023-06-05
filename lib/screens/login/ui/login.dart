@@ -25,16 +25,29 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  Future<void> login() async {
+  Future<void> login(BuildContext context) async {
     try {
-      print("login working");
-      print(emailController.text);
-      print(passwordController.text);
       await APIs.auth.signInWithEmailAndPassword(
-          email: emailController.text.trim(),
-          password: passwordController.text.trim());
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Logged in'),
+          duration: Duration(seconds: 2),
+        ),
+      );
     } on FirebaseAuthException catch (e) {
-      print(e);
+      print('Error code: ${e.code}');
+      print('Error message: ${e.message}');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('User not found. Invalid email or password.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
     }
   }
 
@@ -51,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const SignupPage()));
           } else if (state is LoginSubmittedInfoState) {
-            login();
+            login(context);
           }
         },
         builder: (context, state) {
@@ -72,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
                   } else {
                     return Scaffold(
                       appBar: AppBar(
-                        automaticallyImplyLeading: false,
+                        automaticallyImplyLeading: true,
                         title: const Text('Login'),
                         actions: [
                           Padding(
@@ -115,8 +128,8 @@ class _LoginPageState extends State<LoginPage> {
                               const SizedBox(height: 30),
                               ElevatedButton(
                                 onPressed: () {
-                                  loginBloc.add(LoginPageSubmitButtonPressedEvent());
-
+                                  loginBloc
+                                      .add(LoginPageSubmitButtonPressedEvent());
                                 },
                                 child: const Text('Submit'),
                               ),
