@@ -94,9 +94,9 @@ class _MessageCardState extends State<MessageCard> {
         Flexible(
           child: Container(
             decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 127, 238, 184),
+                color: const Color.fromARGB(255, 184, 94, 215),
                 border:
-                    Border.all(color: const Color.fromARGB(255, 7, 141, 76)),
+                    Border.all(color: const Color.fromARGB(255, 110, 105, 213)),
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),

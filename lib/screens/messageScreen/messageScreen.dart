@@ -1,12 +1,21 @@
-import 'dart:io' show Platform;
+import 'dart:developer';
+import 'dart:io' show File, Platform;
 
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:vendoo/models/chat_user.dart';
 import 'package:vendoo/widgets/message_card.dart';
 
 import '../../api/apis.dart';
 import '../../models/message.dart';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:http/http.dart';
 
 class MessageScreen extends StatefulWidget {
   final ChatUser user;
@@ -65,24 +74,24 @@ class _MessageScreenState extends State<MessageScreen> {
                                 });
                           } else {
                             return const Center(
-                                child: Text('Say Hiii!👋',
+                                child: Text('Say Hi!👋',
                                     style: TextStyle(fontSize: 20)));
                           }
                       }
                     }),
               ),
               _chatInput(),
-              if(_showEmoji)
-              SizedBox(
-                height: 250,
-                child: EmojiPicker(
-                  textEditingController: _textController,
-                  config: const Config(
-                    columns: 8,
-                    emojiSizeMax: 32,
+              if (_showEmoji)
+                SizedBox(
+                  height: 250,
+                  child: EmojiPicker(
+                    textEditingController: _textController,
+                    config: const Config(
+                      columns: 8,
+                      emojiSizeMax: 32,
+                    ),
                   ),
-                ),
-              )
+                )
             ],
           ),
         ),
@@ -125,6 +134,7 @@ class _MessageScreenState extends State<MessageScreen> {
   }
 
   Widget _chatInput() {
+    bool _showEmoji = false, _isUploading = false;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: Row(
@@ -155,7 +165,7 @@ class _MessageScreenState extends State<MessageScreen> {
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     onTap: () {
-                       if(_showEmoji)setState(() => _showEmoji = !_showEmoji);
+                      if (_showEmoji) setState(() => _showEmoji = !_showEmoji);
                     },
                     decoration: const InputDecoration(
                       hintText: 'Type Something...',
@@ -166,7 +176,30 @@ class _MessageScreenState extends State<MessageScreen> {
 
                   //image from device
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Future<void> _pickImage() async {
+                          final ImagePicker picker = ImagePicker();
+                          final XFile? pickedImage = await picker.pickImage(
+                              source: ImageSource.gallery);
+
+                          if (pickedImage != null) {
+                            final ImagePicker picker = ImagePicker();
+
+                            // Picking multiple images
+                            final List<XFile> images =
+                                await picker.pickMultiImage(imageQuality: 70);
+
+                            // uploading & sending image one by one
+                            for (var i in images) {
+                              log('Image Path: ${i.path}');
+                              setState(() => _isUploading = true);
+                              await APIs.sendChatImage(
+                                  widget.user, File(i.path));
+                              setState(() => _isUploading = false);
+                            }
+                          }
+                        }
+                      },
                       icon: const Icon(
                         Icons.image,
                         color: Color.fromARGB(255, 135, 13, 156),
@@ -175,7 +208,20 @@ class _MessageScreenState extends State<MessageScreen> {
 
                   // image from camera
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Future<void> _pickImageFromCamera() async {
+                          final ImagePicker picker = ImagePicker();
+                          final XFile? pickedImage = await picker.pickImage(
+                              source: ImageSource.camera);
+
+                          if (pickedImage != null) {
+                            // Image picked successfully, do something with it
+                            // For example, display the picked image or upload it
+                            // to a server
+                            // pickedImage.path will give you the file path of the picked image
+                          }
+                        }
+                      },
                       icon: const Icon(
                         Icons.camera_alt_rounded,
                         color: Color.fromARGB(255, 135, 13, 156),
@@ -193,7 +239,7 @@ class _MessageScreenState extends State<MessageScreen> {
           MaterialButton(
             onPressed: () {
               if (_textController.text.isNotEmpty) {
-                APIs.sendMessage(widget.user, _textController.text);
+                APIs.sendMessage(widget.user, _textController.text, Type.Text);
                 _textController.text = '';
               }
             },
