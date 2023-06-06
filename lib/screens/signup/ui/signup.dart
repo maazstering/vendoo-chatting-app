@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vendoo/screens/chat/ui/chat.dart';
 import '../../../api/apis.dart';
@@ -16,6 +18,9 @@ class _SignupPageState extends State<SignupPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+  UserCredential? userCredential;
+  String error = '';
+  bool isReady = false; // to check if the error has been registered or not
 
   void checkPasswordsMatch() {
     setState(() {
@@ -39,18 +44,32 @@ class _SignupPageState extends State<SignupPage> {
           email: email,
           password: password,
         );
-
-        if (userCredential != null && userCredential.user != null) {
-          // User creation successful
-          await APIs.createUser();
-        } else {
-          // User creation failed
-          print('User creation failed: userCredential or user is null.');
-        }
       } on FirebaseAuthException catch (e) {
-        print('FirebaseAuthException: ${e.code} - ${e.message}');
-      } catch (e) {
-        print('Error: $e');
+        //error = e.message.toString();
+        if (e.message.toString().contains('email-already-in-use')) {
+          error = 'This email is already in use';
+        } else if (e.message.toString().contains('invalid-email')) {
+          error = 'Your email address is invalid';
+        } else if (e.message.toString().contains('weak-password')) {
+          error = 'Your password is weak';
+        } else if (e.message.toString().contains('unknown')) {
+          error = 'unknown error';
+        }
+        //print('FirebaseAuthException: ${e.code}');
+        print('this is the error message: $error');
+      }
+
+      //set the state to ready once the try catch block is complete
+      setState(() {
+        isReady = true;
+      });
+
+      if (userCredential != null && userCredential!.user != null) {
+        // User creation successful
+        await APIs.createUser();
+      } else {
+        // User creation failed
+        print('User creation failed: userCredential or user is null.');
       }
     }
   }
@@ -123,10 +142,21 @@ class _SignupPageState extends State<SignupPage> {
               ElevatedButton(
                 onPressed: () {
                   signUp();
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ChatRoomJoiningPage()));
+                  if (isReady) {
+                    if (error == '') // there is no error
+                    {
+                      print('no error');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: ((context) => ChatRoomJoiningPage())));
+                    }
+                    // an error exists
+                    else {
+                      SnackBar snackBar = SnackBar(content: Text('$error'));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }
+                  }
                 },
                 child: const Text('Sign Up'),
               ),
@@ -134,9 +164,9 @@ class _SignupPageState extends State<SignupPage> {
               TextButton(
                 onPressed: () {
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
-                  );
+                      context,
+                      MaterialPageRoute(
+                          builder: ((context) => const LoginPage())));
                 },
                 child: const Text(
                   "Already have an account? Login",

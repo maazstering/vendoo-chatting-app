@@ -17,6 +17,8 @@ class _LoginPageState extends State<LoginPage> {
   final LoginBloc loginBloc = LoginBloc();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  String error = '';
+  bool isReady = false;
 
   @override
   void dispose() {
@@ -25,30 +27,36 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  Future<void> login(BuildContext context) async {
+  Future<void> login() async {
     try {
       await APIs.auth.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Logged in'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    } on FirebaseAuthException catch (e) {
-      print('Error code: ${e.code}');
-      print('Error message: ${e.message}');
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('User not found. Invalid email or password.'),
-          duration: Duration(seconds: 2),
-        ),
-      );
     }
+
+    on FirebaseAuthException catch (e) {
+        //error = e.message.toString();
+        if(e.message.toString().contains('wrong-password')){
+          error = 'Your password is incorrect';
+        }
+        else if (e.message.toString().contains('invalid-email')){
+          error = 'Your email address is invalid';
+        }
+        else if(e.message.toString().contains('user-not-found')){
+          error = 'This user does not exist';
+        }
+        else if(e.message.toString().contains('unknown')){
+          error = 'unknown error';
+        }
+        //print('FirebaseAuthException: ${e.code}');
+        print('this is the error message: $error');
+      }
+
+      //set isReady to true once the try catch block has completed
+      setState(() {
+        isReady = true;
+      });
   }
 
   @override
@@ -64,7 +72,22 @@ class _LoginPageState extends State<LoginPage> {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const SignupPage()));
           } else if (state is LoginSubmittedInfoState) {
-            login(context);
+            login();
+            if (isReady) {
+                    if (error == '') // there is no error
+                    {
+                      print('no error');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: ((context) => ChatRoomJoiningPage())));
+                    }
+                    // an error exists
+                    else {
+                      SnackBar snackBar = SnackBar(content: Text('$error'));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }
+                  }
           }
         },
         builder: (context, state) {
