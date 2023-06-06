@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:vendoo/models/chat_user.dart';
 import 'package:vendoo/models/message.dart';
@@ -8,6 +11,8 @@ class APIs {
   static FirebaseAuth auth = FirebaseAuth.instance;
 
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  static FirebaseStorage storage = FirebaseStorage.instance;
 
   //get instance of the current user
   static User get user => auth.currentUser!;
@@ -87,7 +92,7 @@ class APIs {
   //chats (collection) --> conversation_id (doc) -->  messages(collection) --> message (doc)
 
   //for sending message
-  static Future<void> sendMessage(ChatUser Chatuser, String msg) async {
+  static Future<void> sendMessage(ChatUser Chatuser, String msg, Type type) async {
     final time = DateTime.now()
         .millisecondsSinceEpoch
         .toString(); // will generate a unique string every time
@@ -96,7 +101,7 @@ class APIs {
         read: '',
         message: msg,
         toId: Chatuser.id,
-        type: Type.Text,
+        type: type,
         sent: time,
         fromId: user.uid);
 
@@ -105,21 +110,38 @@ class APIs {
     await ref.doc(time).set(message.toJson());
   }
 
- static Stream<QuerySnapshot<Map<String, dynamic>>> getLastMessage(
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getLastMessage(
       ChatUser user) {
-        return firestore
-        .collection('Chats/${getConversationID(user.id)}/Messages/').orderBy('sent', descending: true).limit(1).snapshots();
+    return firestore
+        .collection('Chats/${getConversationID(user.id)}/Messages/')
+        .orderBy('sent', descending: true)
+        .limit(1)
+        .snapshots();
   }
 
   //updating the user read message status
-  static Future<void> updateMessageReadStatus(Message message) async{
+  static Future<void> updateMessageReadStatus(Message message) async {
     firestore
-        .collection('Chats/${getConversationID(message.fromId)}/Messages/').doc(message.sent).update({
-          'read': DateTime.now()
-        .millisecondsSinceEpoch
-        .toString()
-        });
+        .collection('Chats/${getConversationID(message.fromId)}/Messages/')
+        .doc(message.sent)
+        .update({'read': DateTime.now().millisecondsSinceEpoch.toString()});
   }
 
+  //send chat image
+  static Future<void> sendChatImage(ChatUser chatUser, File file) async {
+    //getting image file extension
+    final ext = file.path.split('.').last;
 
+    //storage file ref with path
+    final ref = storage.ref().child(
+        'Images/${getConversationID(chatUser.id)}/${DateTime.now().millisecondsSinceEpoch}.$ext');
+
+    //uploading image
+    await ref.putFile(file, SettableMetadata(contentType: 'image/$ext')).then(
+        (p0) => print('data transferred : ${p0.bytesTransferred / 1000} kb'));
+
+    //updating image in firestore database
+    final imageUrl = await ref.getDownloadURL();
+    await sendMessage(chatUser, imageUrl, Type.image);
+  }
 }

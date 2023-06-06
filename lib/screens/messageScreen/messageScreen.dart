@@ -1,7 +1,8 @@
-import 'dart:io' show Platform;
+import 'dart:io' ;
 
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:vendoo/models/chat_user.dart';
 import 'package:vendoo/widgets/message_card.dart';
 
@@ -25,6 +26,8 @@ class _MessageScreenState extends State<MessageScreen> {
 
   // to check whether to show emojis or not
   bool _showEmoji = false;
+
+  String? _image;
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +169,15 @@ class _MessageScreenState extends State<MessageScreen> {
 
                   //image from device
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () async{
+                        final ImagePicker picker = ImagePicker();
+                        final XFile? image = await picker.pickImage(source: ImageSource.gallery, imageQuality: 70);
+                        if(image != null){
+                          print('image path: ${image.path}');
+                          _image = image.path;
+                          await APIs.sendChatImage(widget.user, File(image.path));
+                        }
+                      },
                       icon: const Icon(
                         Icons.image,
                         color: Color.fromARGB(255, 135, 13, 156),
@@ -175,7 +186,15 @@ class _MessageScreenState extends State<MessageScreen> {
 
                   // image from camera
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        final ImagePicker picker = ImagePicker();
+                        final XFile? image = await picker.pickImage(source: ImageSource.camera, imageQuality: 70);
+                        if(image != null){
+                          print('image path: ${image.path}');
+                          _image = image.path;
+                          await APIs.sendChatImage(widget.user, File(image.path));
+                        }
+                      },
                       icon: const Icon(
                         Icons.camera_alt_rounded,
                         color: Color.fromARGB(255, 135, 13, 156),
@@ -193,7 +212,7 @@ class _MessageScreenState extends State<MessageScreen> {
           MaterialButton(
             onPressed: () {
               if (_textController.text.isNotEmpty) {
-                APIs.sendMessage(widget.user, _textController.text);
+                APIs.sendMessage(widget.user, _textController.text, Type.Text);
                 _textController.text = '';
               }
             },

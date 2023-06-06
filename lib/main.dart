@@ -14,7 +14,9 @@ void main() async {
           apiKey: "AIzaSyCxZ-1e4LBtxYpi82i86yTRjl9NBgu1I-k",
           appId: "1:119840048542:android:424448d97c606e3cb8028f",
           messagingSenderId: "119840048542",
-          projectId: "vendoo-chat"));
+          projectId: "vendoo-chat",
+          storageBucket: "vendoo-chat.appspot.com"
+          ));
   runApp(const MyApp());
 }
 
