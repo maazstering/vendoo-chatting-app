@@ -5,7 +5,7 @@ import 'package:vendoo/api/apis.dart';
 import 'package:vendoo/helper/my_date_util.dart';
 import '../models/chat_user.dart';
 import '../models/message.dart';
-import '../screens/messageScreen/messageScreen.dart';
+import '../screens/messaging/ui/messageScreen.dart';
 
 class chatUserCard extends StatefulWidget {
   final ChatUser user;
@@ -58,7 +58,8 @@ class _chatUserCardState extends State<chatUserCard> {
 
                   trailing: _message == null
                       ? null
-                      : _message!.read.isEmpty && _message!.fromId != APIs.user.uid
+                      : _message!.read.isEmpty &&
+                              _message!.fromId != APIs.user.uid
                           ? Container(
                               width: 15,
                               height: 15,
@@ -67,8 +68,9 @@ class _chatUserCardState extends State<chatUserCard> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             )
-                          :  Text(
-                              MyDateUtil().getLastMessageTime(context: context, time: _message!.sent),
+                          : Text(
+                              MyDateUtil().getLastMessageTime(
+                                  context: context, time: _message!.sent),
                               style: TextStyle(color: Colors.black54),
                             ),
                 );

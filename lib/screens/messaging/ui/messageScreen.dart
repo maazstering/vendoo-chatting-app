@@ -3,12 +3,13 @@ import 'dart:io' show File, Platform;
 
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vendoo/models/chat_user.dart';
 import 'package:vendoo/widgets/message_card.dart';
 
-import '../../api/apis.dart';
-import '../../models/message.dart';
+import '../../../api/apis.dart';
+import '../../../models/message.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -16,6 +17,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart';
+
+import '../bloc/message_bloc.dart';
 
 class MessageScreen extends StatefulWidget {
   final ChatUser user;
@@ -28,74 +31,89 @@ class MessageScreen extends StatefulWidget {
 class _MessageScreenState extends State<MessageScreen> {
   // for storing all messages
   List<Message> _list = [];
-
   //for handling message text changes
   final _textController = TextEditingController();
 
   // to check whether to show emojis or not
   bool _showEmoji = false;
 
+  final MessageBloc _messageBloc = MessageBloc();
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            flexibleSpace: _appBar(),
-          ),
-          body: Column(
-            children: [
-              Expanded(
-                child: StreamBuilder(
-                    stream: APIs.getAllMessages(widget.user),
-                    builder: (context, snapshot) {
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.waiting:
-                        case ConnectionState.none:
-                          return const Center(child: const SizedBox());
-                        case ConnectionState.active:
-                        case ConnectionState.done:
-                          final data = snapshot.data?.docs;
-                          _list = data
-                                  ?.map((e) => Message.fromJson(e.data()))
-                                  .toList() ??
-                              [];
-
-                          if (_list.isNotEmpty) {
-                            return ListView.builder(
-                                itemCount: _list.length,
-                                physics: const BouncingScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  return MessageCard(
-                                    message: _list[index],
-                                  );
-                                });
-                          } else {
-                            return const Center(
-                                child: Text('Say Hi!👋',
-                                    style: TextStyle(fontSize: 20)));
-                          }
-                      }
-                    }),
+    return BlocConsumer<MessageBloc, MessageState>(
+      listener: (context, state) {
+        if (state is MessageErrorState) {
+          // Show a snackbar or display an error message when an error occurs
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error: ${state.message}'),
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        return GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: SafeArea(
+            child: Scaffold(
+              appBar: AppBar(
+                automaticallyImplyLeading: false,
+                flexibleSpace: _appBar(),
               ),
-              _chatInput(),
-              if (_showEmoji)
-                SizedBox(
-                  height: 250,
-                  child: EmojiPicker(
-                    textEditingController: _textController,
-                    config: const Config(
-                      columns: 8,
-                      emojiSizeMax: 32,
-                    ),
+              body: Column(
+                children: [
+                  Expanded(
+                    child: StreamBuilder(
+                        stream: APIs.getAllMessages(widget.user),
+                        builder: (context, snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                            case ConnectionState.none:
+                              return const Center(child: const SizedBox());
+                            case ConnectionState.active:
+                            case ConnectionState.done:
+                              final data = snapshot.data?.docs;
+                              _list = data
+                                      ?.map((e) => Message.fromJson(e.data()))
+                                      .toList() ??
+                                  [];
+
+                              if (_list.isNotEmpty) {
+                                return ListView.builder(
+                                    itemCount: _list.length,
+                                    physics: const BouncingScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      return MessageCard(
+                                        message: _list[index],
+                                      );
+                                    });
+                              } else {
+                                return const Center(
+                                    child: Text('Say Hi!👋',
+                                        style: TextStyle(fontSize: 20)));
+                              }
+                          }
+                        }),
                   ),
-                )
-            ],
+                  _chatInput(),
+                  if (_showEmoji)
+                    SizedBox(
+                      height: 250,
+                      child: EmojiPicker(
+                        textEditingController: _textController,
+                        config: const Config(
+                          columns: 8,
+                          emojiSizeMax: 32,
+                        ),
+                      ),
+                    )
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -111,8 +129,7 @@ class _MessageScreenState extends State<MessageScreen> {
             )),
         //image needs to be fixed
         CircleAvatar(
-          child: Image.asset(
-              'assets/images/userIcon.jpg'), // TODO: add image path here
+          child: Image.asset('assets/images/userIcon.jpg'),
         ),
         const SizedBox(
           width: 10,
@@ -238,10 +255,17 @@ class _MessageScreenState extends State<MessageScreen> {
           //send message button
           MaterialButton(
             onPressed: () {
-              if (_textController.text.isNotEmpty) {
-                APIs.sendMessage(widget.user, _textController.text, Type.Text);
-                _textController.text = '';
-              }
+              _messageBloc.add(
+                SendMessageEvent(
+                  type: Type.Text,
+                  message: _textController.text,
+                  user: widget.user,
+                ),
+              );
+              // if (_textController.text.isNotEmpty) {
+              //   APIs.sendMessage(widget.user, _textController.text, Type.Text);
+              //   _textController.text = '';
+              // }
             },
             minWidth: 0,
             padding:
