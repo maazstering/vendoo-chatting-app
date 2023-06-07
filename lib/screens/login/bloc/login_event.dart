@@ -8,7 +8,6 @@ abstract class LoginEvent {
 }
 
 //not yet implemeted
-class LoginPageSubmitButtonPressedEvent extends LoginEvent{}
+class LoginPageSubmitButtonPressedEvent extends LoginEvent {}
 
-
-class LoginPageSignUpPageNavigateEvent extends LoginEvent{}
+class LoginPageSignUpPageNavigateEvent extends LoginEvent {}

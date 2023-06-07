@@ -197,28 +197,19 @@ class _MessageScreenState extends State<MessageScreen> {
 
                   //image from device
                   IconButton(
-                      onPressed: () {
-                        Future<void> _pickImage() async {
-                          final ImagePicker picker = ImagePicker();
-                          final XFile? pickedImage = await picker.pickImage(
-                              source: ImageSource.gallery);
+                      onPressed: () async {
+                        final ImagePicker picker = ImagePicker();
 
-                          if (pickedImage != null) {
-                            final ImagePicker picker = ImagePicker();
+                        // Picking multiple images
+                        final List<XFile> images =
+                            await picker.pickMultiImage(imageQuality: 70);
 
-                            // Picking multiple images
-                            final List<XFile> images =
-                                await picker.pickMultiImage(imageQuality: 70);
-
-                            // uploading & sending image one by one
-                            for (var i in images) {
-                              log('Image Path: ${i.path}');
-                              setState(() => _isUploading = true);
-                              await APIs.sendChatImage(
-                                  widget.user, File(i.path));
-                              setState(() => _isUploading = false);
-                            }
-                          }
+                        // uploading & sending image one by one
+                        for (var i in images) {
+                          log('Image Path: ${i.path}');
+                          setState(() => _isUploading = true);
+                          await APIs.sendChatImage(widget.user, File(i.path));
+                          setState(() => _isUploading = false);
                         }
                       },
                       icon: const Icon(
@@ -229,18 +220,19 @@ class _MessageScreenState extends State<MessageScreen> {
 
                   // image from camera
                   IconButton(
-                      onPressed: () {
-                        Future<void> _pickImageFromCamera() async {
-                          final ImagePicker picker = ImagePicker();
-                          final XFile? pickedImage = await picker.pickImage(
-                              source: ImageSource.camera);
+                      onPressed: () async {
+                        final ImagePicker picker = ImagePicker();
 
-                          if (pickedImage != null) {
-                            // Image picked successfully, do something with it
-                            // For example, display the picked image or upload it
-                            // to a server
-                            // pickedImage.path will give you the file path of the picked image
-                          }
+                        // Pick an image
+                        final XFile? image = await picker.pickImage(
+                            source: ImageSource.camera, imageQuality: 70);
+                        if (image != null) {
+                          log('Image Path: ${image.path}');
+                          setState(() => _isUploading = true);
+
+                          await APIs.sendChatImage(
+                              widget.user, File(image.path));
+                          setState(() => _isUploading = false);
                         }
                       },
                       icon: const Icon(

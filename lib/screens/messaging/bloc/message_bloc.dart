@@ -18,9 +18,12 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   MessageBloc() : super(MessageInitial());
 
   get messages => null;
-
   @override
   Stream<MessageState> mapEventToState(MessageEvent event) async* {
+    on<SendMessageEvent>((event, emit) {
+      emit(MessageSentState());
+    });
+
     if (event is SendMessageEvent) {
       yield* _mapSendMessageEventToState(event);
     } else if (event is LoadMessagesEvent) {
@@ -32,12 +35,15 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     } else if (event is PickImageFromCameraEvent) {
       yield* _mapPickImageFromCameraEventToState(event);
     }
-    on((MessageErrorEvent, emit) => emit(MessageErrorState("Error")));
+
+    on<MessageErrorEvent>((event, emit) {
+      emit(MessageErrorState("Error"));
+    });
   }
 
   Stream<MessageState> _mapSendMessageEventToState(
       SendMessageEvent event) async* {
-    APIs.sendMessage(event.user, event.message!, event.type);
+    APIs.sendMessage(event.user, event.message, event.type as Type);
 
     yield MessageSentState();
   }
@@ -47,10 +53,15 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   Stream<MessageState> _mapLoadMessagesEventToState(
       LoadMessagesEvent event) async* {
     final user = event.user;
-    if (_textController.text.isNotEmpty) {
-      APIs.sendMessage(user!, _textController.text, Type.Text);
-      _textController.text = '';
-    }
+    // on<LoginPageSubmitButtonPressedEvent>((event, emit) {
+    //   emit(LoginSubmittedInfoState());
+    // });
+    on<SendMessageEvent>((event, emit) {
+      if (_textController.text.isNotEmpty) {
+        APIs.sendMessage(user!, _textController.text, Type.Text);
+        _textController.text = '';
+      }
+    });
     if (user != null) {
       final messages = await APIs.getAllMessages(user);
       yield MessagesLoadedState(messages as List<Message>);

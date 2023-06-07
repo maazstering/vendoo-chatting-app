@@ -1,17 +1,17 @@
 part of 'login_bloc.dart';
 
-abstract class LoginState{
+abstract class LoginState {
   const LoginState();
-  
+
   @override
   List<Object> get props => [];
 }
 
-abstract class LoginActionState extends LoginState{}
+abstract class LoginActionState extends LoginState {}
 
 class LoginInitial extends LoginState {}
 
-class LoginSubmittedInfoState extends LoginState{}
+class LoginSubmittedInfoState extends LoginState {}
 
 // class LoadingSubmitState extends LoginState {}
 
