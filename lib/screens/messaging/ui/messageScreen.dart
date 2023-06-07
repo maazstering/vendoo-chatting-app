@@ -38,82 +38,86 @@ class _MessageScreenState extends State<MessageScreen> {
   bool _showEmoji = false;
 
   final MessageBloc _messageBloc = MessageBloc();
-
+//  return BlocProvider<LoginBloc>.value(
+//       value: loginBloc,
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<MessageBloc, MessageState>(
-      listener: (context, state) {
-        if (state is MessageErrorState) {
-          // Show a snackbar or display an error message when an error occurs
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error: ${state.message}'),
+    return BlocProvider(
+      create: (context) => MessageBloc(),
+      child: BlocConsumer<MessageBloc, MessageState>(
+        listener: (context, state) {
+          if (state is MessageErrorState) {
+            // Show a snackbar or display an error message when an error occurs
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Error: ${state.message}'),
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          return GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: SafeArea(
+              child: Scaffold(
+                appBar: AppBar(
+                  automaticallyImplyLeading: false,
+                  flexibleSpace: _appBar(),
+                ),
+                body: Column(
+                  children: [
+                    Expanded(
+                      child: StreamBuilder(
+                          stream: APIs.getAllMessages(widget.user),
+                          builder: (context, snapshot) {
+                            switch (snapshot.connectionState) {
+                              case ConnectionState.waiting:
+                              case ConnectionState.none:
+                                return const Center(child: const SizedBox());
+                              case ConnectionState.active:
+                              case ConnectionState.done:
+                                final data = snapshot.data?.docs;
+                                _list = data
+                                        ?.map((e) => Message.fromJson(e.data()))
+                                        .toList() ??
+                                    [];
+
+                                if (_list.isNotEmpty) {
+                                  return ListView.builder(
+                                      itemCount: _list.length,
+                                      physics: const BouncingScrollPhysics(),
+                                      itemBuilder: (context, index) {
+                                        return MessageCard(
+                                          message: _list[index],
+                                        );
+                                      });
+                                } else {
+                                  return const Center(
+                                      child: Text('Say Hi!👋',
+                                          style: TextStyle(fontSize: 20)));
+                                }
+                            }
+                          }),
+                    ),
+                    _chatInput(),
+                    if (_showEmoji)
+                      SizedBox(
+                        height: 250,
+                        child: EmojiPicker(
+                          textEditingController: _textController,
+                          config: const Config(
+                            columns: 8,
+                            emojiSizeMax: 32,
+                          ),
+                        ),
+                      )
+                  ],
+                ),
+              ),
             ),
           );
-        }
-      },
-      builder: (context, state) {
-        return GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: SafeArea(
-            child: Scaffold(
-              appBar: AppBar(
-                automaticallyImplyLeading: false,
-                flexibleSpace: _appBar(),
-              ),
-              body: Column(
-                children: [
-                  Expanded(
-                    child: StreamBuilder(
-                        stream: APIs.getAllMessages(widget.user),
-                        builder: (context, snapshot) {
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.waiting:
-                            case ConnectionState.none:
-                              return const Center(child: const SizedBox());
-                            case ConnectionState.active:
-                            case ConnectionState.done:
-                              final data = snapshot.data?.docs;
-                              _list = data
-                                      ?.map((e) => Message.fromJson(e.data()))
-                                      .toList() ??
-                                  [];
-
-                              if (_list.isNotEmpty) {
-                                return ListView.builder(
-                                    itemCount: _list.length,
-                                    physics: const BouncingScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      return MessageCard(
-                                        message: _list[index],
-                                      );
-                                    });
-                              } else {
-                                return const Center(
-                                    child: Text('Say Hi!👋',
-                                        style: TextStyle(fontSize: 20)));
-                              }
-                          }
-                        }),
-                  ),
-                  _chatInput(),
-                  if (_showEmoji)
-                    SizedBox(
-                      height: 250,
-                      child: EmojiPicker(
-                        textEditingController: _textController,
-                        config: const Config(
-                          columns: 8,
-                          emojiSizeMax: 32,
-                        ),
-                      ),
-                    )
-                ],
-              ),
-            ),
-          ),
-        );
-      },
+        },
+      ),
     );
   }
 
