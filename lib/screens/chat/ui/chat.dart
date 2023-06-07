@@ -51,7 +51,7 @@ class _ChatRoomJoiningPageState extends State<ChatRoomJoiningPage> {
                   onChanged: (value) {
                     //search logic
                     _searchList.clear();
-    
+
                     for (var i in _list) {
                       if (i.name.toLowerCase().contains(value.toLowerCase())) {
                         _searchList.add(i);
@@ -105,10 +105,15 @@ class _ChatRoomJoiningPageState extends State<ChatRoomJoiningPage> {
                             [];
                         if (_list.isNotEmpty) {
                           return ListView.builder(
-                              itemCount: _isSearching  ? _searchList.length : _list.length,
+                              itemCount: _isSearching
+                                  ? _searchList.length
+                                  : _list.length,
                               physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
-                                return chatUserCard(user: _isSearching ? _searchList[index] : _list[index]);
+                                return chatUserCard(
+                                    user: _isSearching
+                                        ? _searchList[index]
+                                        : _list[index]);
                               });
                         } else {
                           return const Center(
@@ -120,16 +125,16 @@ class _ChatRoomJoiningPageState extends State<ChatRoomJoiningPage> {
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const ChatRoomCreationPage()),
-            );
-          },
-          child: const Icon(Icons.add),
-        ),
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     Navigator.push(
+        //       context,
+        //       MaterialPageRoute(
+        //           builder: (context) => const ChatRoomCreationPage()),
+        //     );
+        //   },
+        //   child: const Icon(Icons.add),
+        // ),
       ),
     );
   }
